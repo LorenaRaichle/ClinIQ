@@ -1,0 +1,65 @@
+# === macOS ===
+# General macOS system files
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# macOS Folder Attributes
+Icon\r
+
+# Thumbnails
+._*
+
+# Files that might appear on external volumes
+.Spotlight-V100
+.Trashes
+
+# === Windows ===
+# Windows thumbnail cache files
+Thumbs.db
+
+# Windows folder configuration file
+Desktop.ini
+
+# Recycle bin
+$RECYCLE.BIN/
+
+# Windows shortcut files
+*.lnk
+
+# === Linux ===
+# Backup files created by editors
+*~
+
+# Temporary files
+*.swp
+
+# Trash folder (common in Ubuntu/Debian)
+.Trash-*
+
+# System-generated files
+.directory
+
+# === Python & Project Specific ===
+# Python caches and bytecode files
+__pycache__/
+*.py[cod]
+
+# Virtual environments
+venv/
+.venv/
+
+# Jupyter notebook checkpoints
+.ipynb_checkpoints
+
+# Dataset & model checkpoints (uncomment if you don't want to commit heavy files)
+# data/raw/
+# data/processed/
+# models/checkpoints/
+
+# Content inside Logs and metrics (if you prefer not to track)
+# logs/*
+# metrics/*
+
+# Environment files (sensitive information)
+.env
