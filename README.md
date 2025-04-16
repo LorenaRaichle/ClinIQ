@@ -1,4 +1,4 @@
-# [Project Title]
+# [clin_IQ: Medical expert-level Question-Answering]
 
 [Briefly describe the goal and scope of your project.]
 
