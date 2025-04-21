@@ -92,7 +92,8 @@ You can also run custom scripts located in the `utils/` directory.
 
 - **Random seeds:** Make sure random seeds are set and noted in your notebooks.
 - **Environment:** Include the exact versions of libraries used (already covered by `requirements.txt`).
-- **Data:** The data used for fine-tuning the model can be accessed over websites such as Kaggle, Huggingface and Github. In case of local data this can be found under data/raw in this repository. Additionally we have provided a list with all datasets used in an Excel sheet that includes the respective links of each data source.
+- **Data:** The data used for fine-tuning the model that has been processed in the "1_Preprocessing.ipynb" file can be accessed over websites such as Kaggle, Huggingface and Github. In case of any local data to this repository, this can be found under data/raw.
+Additionally we have provided a list with all datasets used, in an Excel sheet "sources_links_to_raw_data.xlsx" (data/raw) which includes the respective link to each data source.
 - **Model Checkpoints:** Provide checkpoints clearly named and explained.
 
 ---
@@ -113,7 +114,7 @@ You can also run custom scripts located in the `utils/` directory.
 ## Results & Evaluation
 
 - [Briefly summarize your evaluation metrics, improvements from baseline, and insights drawn from experiments.]
-- All detailed results are documented in `metrics/firstResults.json`.
+- We have decided on a number of evaluation metrics, that can be found listed under metrics in the Excel sheet "Evaluation_Metrics.xlsx". We evaluate the model versions in the "4_Evaluation.ipynb" file.
 
 ---
 
