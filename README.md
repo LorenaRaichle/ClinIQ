@@ -136,7 +136,7 @@ Additionally we have provided a list with all datasets used, in an Excel sheet "
 | Aid                 | Usage / Application                                                                 | Affected Areas |
 |---------------------|--------------------------------------------------------------------------------------|----------------|
 | **Google's Gemini**     | Debugging and generation of code    | Preprocessing.ipynb    |
-| **Chat GPT 4.0 – OpenAI** | Brainstorming relevant metrics for evaluation | Evaluation.ipynb   |
-
+| **Chat GPT 4.0 – OpenAI** | Brainstorming relevant metrics for evaluation| Evaluation.ipynb   |
+| **Chat GPT 4.0 – OpenAI** |Citation generation| Entire repository   | 
 <sub>Table 1: Writing Aids (Art. 57 AB)</sub>
 
