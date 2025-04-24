@@ -1,0 +1,5 @@
+1. Why do we need the reasoning steps for the multihop questions. What exactly is done there?
+
+2. Why does the multiple choice dataset transform_MC1_dataset have correct_answer options labeled E, even though there is only the A, B, C, D option.
+
+3. 
