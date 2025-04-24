@@ -128,3 +128,12 @@ Additionally we have provided a list with all datasets used, in an Excel sheet "
 - [Library Used](https://example-library.com)
 
 ---
+## Directory of Writing Aids
+
+| Aid                 | Usage / Application                                                                 | Affected Areas |
+|---------------------|--------------------------------------------------------------------------------------|----------------|
+| **Google's Gemini**     | Debugging and generation of code    | Preprocessing.ipynb    |
+| **Chat GPT 4.0 – OpenAI** | Brainstorming relevant metrics for evaluation | Evaluation.ipynb   |
+
+<sub>Table 1: Writing Aids (Art. 57 AB)</sub>
+
