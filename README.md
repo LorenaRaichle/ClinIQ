@@ -1,4 +1,4 @@
-# clin_IQ: Medical expert-level Question-Answering
+# clin_IQ: A Medical Expert-Level Question-Answering System
 ![Image](https://github.com/Adria100/clin_IQ/blob/main/Process%20Flowchart%20Diagram.png)
 > *Diagram inspired by [GeeksforGeeks (2024)](https://media.geeksforgeeks.org/wp-content/uploads/20240506173418/RAG-vs-Fine-tuning.png).*
 
