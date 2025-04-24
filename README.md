@@ -1,4 +1,7 @@
 # clin_IQ: Medical expert-level Question-Answering
+!Image] ()(images/my-diagram.png)
+> *Diagram inspired by [GeeksforGeeks (2024)](https://media.geeksforgeeks.org/wp-content/uploads/20240506173418/RAG-vs-Fine-tuning.png).*
+
 
 Goal and scope of this project is the training of a Q&A-system trained specifically on medical data, able to handle 4 types of questions.
 To optimize the output of our model, Data Augmentation, Preprocessing Enhancements, Parameter Choice and both Retrieval-Augmented Generation as well as fine-tuning on a combination of 16 datasets are used to reach higher performance compared to the baseline model. 
