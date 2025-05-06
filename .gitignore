@@ -25,9 +25,11 @@ Desktop.ini
 $RECYCLE.BIN/
 
 # Ignore dataset JSON files
-full_dataset.json
-train_dataset.json
-test_dataset.json
+FINAL_DATASETS/full_dataset.json
+FINAL_DATASETS/train_dataset.json
+FINAL_DATASETS/test_dataset.json
+# .gitignore
+venv_clin/
 
 # Windows shortcut files
 *.lnk
