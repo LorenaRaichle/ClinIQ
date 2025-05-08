@@ -70,6 +70,9 @@ class EvaluationSuite():
     """
     Class that contains the evaluation scripts for each question type.
     """
+    def hello_world(self):
+        print("Hello World")
+        
     def evaluate_MC(self, predictions, ground_truth):
         """
         Evaluates the accuracy of multiple-choice predictions.
