@@ -29,6 +29,8 @@ $RECYCLE.BIN/
 data/full_dataset.json
 data/train_dataset.json
 data/test_dataset.json
+data/train_dataset_rag.json
+
 .gitignore
 venv_clin/
 
