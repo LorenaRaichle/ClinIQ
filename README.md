@@ -108,7 +108,7 @@ Additionally we have provided a list with all datasets used, in an Excel sheet "
 | Name              | Contributions                                  |
 |-------------------|------------------------------------------------|
 | L. R.| Data preprocessing, baseline model evaluation.|
-| K. M. W.| Model training, hyperparameter tuning.|
+| M. K. W.| Model training, hyperparameter tuning.|
 | A. P.| Evaluation, Data preprocessing, visualization, documentation.|
 
 
