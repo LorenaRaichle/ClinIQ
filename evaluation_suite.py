@@ -1,4 +1,6 @@
 import re
+import nltk
+import pandas as pd
 import matplotlib.pyplot as plt
 from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay, accuracy_score, precision_score, recall_score
 import numpy as np
@@ -7,10 +9,13 @@ from rouge_score import rouge_scorer
 from nltk.translate.meteor_score import meteor_score
 import Levenshtein
 import spacy
+from tabulate import tabulate
 from bert_score import score
 from sklearn.metrics.pairwise import cosine_similarity
-
-
+from nltk.tokenize import sent_tokenize
+nlp = spacy.load("en_core_web_md")
+nltk.download('wordnet')
+nltk.download('punkt_tab')
 
 def evaluate_classification(y_true, y_pred):
     """
@@ -59,7 +64,7 @@ def evaluate_bertscore(references, predictions, lang='en'):#https://milvus.io/ai
         'f1': F1.mean().item()}
 
 def compute_cosine_similarity(reference, prediction):#https://www.comet.com/site/blog/bertscore-for-llm-evaluation/
-    nlp = spacy.load("en_core_web_md")
+    
     doc1 = nlp(reference)
     doc2 = nlp(prediction)
     return cosine_similarity([doc1.vector], [doc2.vector])[0][0]
@@ -185,7 +190,8 @@ class EvaluationSuite():
             if pred == 'N/A':
                 continue
             bleu_scores.append(compute_bleu(ref, pred))
-            meteor_scores.append(meteor_score([ref], pred))
+
+            meteor_scores.append(meteor_score([ref.split()], pred.split()))
             lev_distances.append(Levenshtein.distance(ref, pred))
             rouge_scores.append(compute_rouge(ref, pred))
 
@@ -219,7 +225,7 @@ class EvaluationSuite():
         } if semantic_scores else {}
 
 
-        return {
+        results = {
             "avg_bleu": avg_bleu,
             "avg_meteor": avg_meteor,
             "avg_levenshtein": avg_levenshtein,
@@ -229,7 +235,15 @@ class EvaluationSuite():
             "avg_cosine_similarity": avg_cosine,
             "avg_reasoning_coherence": avg_coherence
         }
-        
+        flat_results = {}
+        for k, v in results.items():
+            if isinstance(v, dict):
+                for subk, subv in v.items():
+                    flat_results[f"{k}_{subk}"] = subv
+            else:
+                flat_results[k] = v
+        df = pd.DataFrame([flat_results])
+        return df
 
 
 
@@ -258,8 +272,8 @@ def main():
     
     evalsuit = EvaluationSuite()
     evals = evalsuit.evaluate_string_answers(predictions, ground_truth)
-    print("Evals sind: ")
-    print(evals)
+    print("Our Evaluation Metrics are: ")
+    print(tabulate(evals, headers='keys', tablefmt='psql', showindex=False))
 
 if __name__ == '__main__': 
     main()
