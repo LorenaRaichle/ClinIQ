@@ -7,12 +7,12 @@ import numpy as np
 from nltk.translate.bleu_score import sentence_bleu, SmoothingFunction
 from rouge_score import rouge_scorer
 from nltk.translate.meteor_score import meteor_score
-import Levenshtein
 import spacy
 import json
 from bert_score import score
 from sklearn.metrics.pairwise import cosine_similarity
 from nltk.tokenize import sent_tokenize
+import tqdm
 nlp = spacy.load("en_core_web_md")
 nltk.download('wordnet')
 nltk.download('punkt_tab')
@@ -183,48 +183,91 @@ class EvaluationSuite():
         plt.show()
 
         return evaluate_classification(ground_truth, predictions)
-    
-    def evaluate_string_answers(self, predictions, ground_truth):
+        
+    def evaluate_string_answers(self, predictions, ground_truth, return_individual=False):
+        """
+        Evaluates a list of predicted strings against ground truth strings using multiple NLP metrics.
 
+        Parameters:
+            predictions (List[str]): List of predicted text outputs.
+            ground_truth (List[str]): Corresponding list of ground truth text outputs.
+            return_individual (bool): If True, returns per-sample metric scores. 
+                                    If False, returns average scores across all samples.
 
+        Returns:
+            dict: If return_individual is False, returns a dictionary with average values for:
+                - BLEU, METEOR, ROUGE-1/2/L
+                - Cosine similarity
+                - Reasoning coherence
+                - Semantic similarity scores (word, sentence, paragraph, match)
+                - BERTScore metrics (if implemented in `evaluate_bertscore`)
+                
+                If return_individual is True, returns a dictionary with lists of per-sample values for:
+                - All metrics listed above (except BERTScore).
+                
+        Notes:
+            - Samples with prediction 'N/A' are treated as zero scores.
+            - Assumes `compute_bleu`, `meteor_score`, `compute_rouge`, 
+            `compute_cosine_similarity`, `evaluate_reasoning_flow`, 
+            `semantic_match_score`, and `evaluate_bertscore` are implemented.
+        """
         assert len(predictions) == len(ground_truth)
 
-        bleu_scores = []
-        meteor_scores = []
-        lev_distances = []
-        rouge_scores = []
+        bleu_scores, meteor_scores, rouge_scores, cosine_sims, coherence_scores, semantic_scores = [], [], [], [], [], []
 
         for ref, pred in zip(ground_truth, predictions):
             if pred == 'N/A':
-                continue
-            bleu_scores.append(compute_bleu(ref, pred))
+                bleu_scores.append(0)
+                meteor_scores.append(0)
+                rouge_scores.append(0) 
+                cosine_sims.append(0)
+                coherence_scores.append(0)
+                semantic_scores.append(0)
 
+            bleu_scores.append(compute_bleu(ref, pred))
             meteor_scores.append(meteor_score([ref.split()], pred.split()))
-            lev_distances.append(Levenshtein.distance(ref, pred))
-            rouge_scores.append(compute_rouge(ref, pred))
+            rouge_scores.append(compute_rouge(ref, pred)) 
+            cosine_sims.append(compute_cosine_similarity(ref, pred))
+            coherence_scores.append(evaluate_reasoning_flow(pred))
+            semantic_scores.append(semantic_match_score(ref, pred))
+
+        if return_individual:
+            rouge1_list = [d['rouge1'] for d in rouge_scores]
+            rouge2_list = [d['rouge2'] for d in rouge_scores]
+            rougeL_list = [d['rougeL'] for d in rouge_scores]
+
+
+            word_similarity_list = [d['word_similarity'] for d in semantic_scores]
+            sentence_similarity_list = [d['sentence_similarity'] for d in semantic_scores]
+            paragraph_similarity_list = [d['paragraph_similarity'] for d in semantic_scores]
+            semantic_match_score_list = [d['semantic_match_score'] for d in semantic_scores]
+
+            return {
+                "bleu": bleu_scores,
+                "meteor": meteor_scores,
+                "rouge1": rouge1_list,
+                "rouge2": rouge2_list,
+                "rougeL": rougeL_list,
+                "cosine_similarity": cosine_sims,
+                "reasoning_coherence": coherence_scores,
+                "word_similarity": word_similarity_list,
+                "sentence_similarity": sentence_similarity_list,
+                "paragraph_similarity": paragraph_similarity_list,
+                "semantic_match_score": semantic_match_score_list
+            }
+
+            
+        bert_scores = evaluate_bertscore(ground_truth, predictions)
+        print("bert_scores: ", bert_scores)
+
 
         avg_bleu = np.mean(bleu_scores) if bleu_scores else 0
         avg_meteor = np.mean(meteor_scores) if meteor_scores else 0
-        avg_levenshtein = np.mean(lev_distances) if lev_distances else 0
         avg_rouge = {
             'rouge1': np.mean([s['rouge1'] for s in rouge_scores]) if rouge_scores else 0,
             'rouge2': np.mean([s['rouge2'] for s in rouge_scores]) if rouge_scores else 0,
             'rougeL': np.mean([s['rougeL'] for s in rouge_scores]) if rouge_scores else 0
         }
-
-
-        bert_scores = evaluate_bertscore(ground_truth, predictions)
-        cosine_sims, coherence_scores, semantic_scores = [], [], []
-
-
-        for ref, pred in zip(ground_truth, predictions):
-            if pred == 'N/A':
-                continue
-            cosine_sims.append(compute_cosine_similarity(ref, pred))
-            coherence_scores.append(evaluate_reasoning_flow(pred))
-            semantic_scores.append(semantic_match_score(ref, pred))
-
-
         avg_cosine = np.mean(cosine_sims) if cosine_sims else 0
         avg_coherence = np.mean(coherence_scores) if coherence_scores else 0
         avg_semantic = {
@@ -232,18 +275,18 @@ class EvaluationSuite():
             for k in semantic_scores[0].keys()
         } if semantic_scores else {}
 
-
         return {
             "avg_bleu": avg_bleu,
             "avg_meteor": avg_meteor,
-            "avg_levenshtein": avg_levenshtein,
-            "avg_rouge": avg_rouge,
-            "semantic_match_score": avg_semantic,
-            "bertscore": bert_scores,
+            **avg_rouge,
+            **avg_semantic,
+            **bert_scores,
             "avg_cosine_similarity": avg_cosine,
             "avg_reasoning_coherence": avg_coherence
         }
-        
+
+
+
 
 
 
@@ -253,61 +296,138 @@ def main():
     """The main function of my Python Application"""
     print('Testing evaluate_string_answers on these arrays:')
     ground_truth = [
-        "The capital of France is Paris.",
-        "Water boils at 100 degrees Celsius.",
-        "The Great Wall of China is visible from space.",
-        "Shakespeare wrote Hamlet.",
-        "Photosynthesis is the process by which plants make food."
+    "The capital of France is Paris. It is known for its art, fashion, and culture. The Eiffel Tower is one of its most famous landmarks.",
+    "Water boils at 100 degrees Celsius. This is under standard atmospheric pressure. It's a key concept in physical science and cooking.",
+    "The Great Wall of China is visible from space. It was built over centuries to protect against invasions. It's one of the New Seven Wonders of the World.",
+    "Shakespeare wrote Hamlet. It is one of his most famous tragedies. The play explores themes of revenge, madness, and mortality.",
+    "Photosynthesis is the process by which plants make food. It uses sunlight, carbon dioxide, and water. This process produces oxygen as a byproduct.",
+    "The Earth revolves around the Sun. This takes approximately 365.25 days. It causes the changing of seasons.",
+    "Mount Everest is the highest mountain on Earth. It reaches a height of 8,848 meters. It lies in the Himalayas between Nepal and Tibet.",
+    "The human body has 206 bones. These bones support movement and protect organs. The femur is the longest bone in the body.",
+    "The Pacific Ocean is the largest ocean on Earth. It covers more than 63 million square miles. It's home to the Mariana Trench, the deepest part of the ocean.",
+    "The speed of light is approximately 299,792 kilometers per second. Nothing in the universe travels faster. This speed is critical in physics and cosmology."
     ]
+
 
     # Predicted answers from the LLM
     predictions = [
-        [
-        "Paris is the capital of France.",
-        "Water boils at one hundred degrees Celsius.",
-        "The Great Wall of China can be seen from space.",
-        "Hamlet was written by Shakespeare.",
-        "Photosynthesis allows plants to produce their own food."
-        ],
-        [
-        "France’s main HQ for croissants and romance is Paris.",
-        "Water gets seriously steamed at 100°C — literally.",
-        "China built a wall so epic, even aliens might squint at it from orbit.",
-        "Shakespeare dropped the OG emo drama — it was called Hamlet.",
-        "Photosynthesis is how plants turn sunlight into salad — science magic."
-        ],
-        [
-        "A group of flamingos is called a flamboyance.",
-        "Bananas are berries, but strawberries aren't.",
-        "Octopuses have three hearts.",
-        "Sloths can hold their breath longer than dolphins.",
-        "Scotland’s national animal is the unicorn." 
-        ]    
+    # prediction0 – exact match
+    [
+        "The capital of France is Paris. It is known for its art, fashion, and culture. The Eiffel Tower is one of its most famous landmarks.",
+        "Water boils at 100 degrees Celsius. This is under standard atmospheric pressure. It's a key concept in physical science and cooking.",
+        "The Great Wall of China is visible from space. It was built over centuries to protect against invasions. It's one of the New Seven Wonders of the World.",
+        "Shakespeare wrote Hamlet. It is one of his most famous tragedies. The play explores themes of revenge, madness, and mortality.",
+        "Photosynthesis is the process by which plants make food. It uses sunlight, carbon dioxide, and water. This process produces oxygen as a byproduct.",
+        "The Earth revolves around the Sun. This takes approximately 365.25 days. It causes the changing of seasons.",
+        "Mount Everest is the highest mountain on Earth. It reaches a height of 8,848 meters. It lies in the Himalayas between Nepal and Tibet.",
+        "The human body has 206 bones. These bones support movement and protect organs. The femur is the longest bone in the body.",
+        "The Pacific Ocean is the largest ocean on Earth. It covers more than 63 million square miles. It's home to the Mariana Trench, the deepest part of the ocean.",
+        "The speed of light is approximately 299,792 kilometers per second. Nothing in the universe travels faster. This speed is critical in physics and cosmology."
+    ],
+    
+    # prediction1 – paraphrased but accurate
+    [
+        "Paris is the capital city of France. It is famous for its museums and historical sites. Tourists often visit the Eiffel Tower and the Louvre.",
+        "Under normal pressure, water boils at 100°C. This temperature is important in both science and cooking. It's the basis for many temperature scales.",
+        "From outer space, the Great Wall of China can be spotted. It stretches thousands of kilometers. Its historical purpose was defense against enemies.",
+        "Hamlet was authored by William Shakespeare. It tells the story of a Danish prince seeking revenge. The play is known for its deep philosophical questions.",
+        "Plants use photosynthesis to make their food. They need sunlight, water, and carbon dioxide. Oxygen is released during the process.",
+        "Earth travels around the Sun once each year. This orbit defines our calendar. It influences the pattern of daylight and seasons.",
+        "At 8,848 meters tall, Mount Everest is Earth’s tallest peak. Climbers come from around the world to summit it. It's part of the Himalaya range.",
+        "An adult human skeleton has 206 bones. These form the structure of our body. Bones like the femur and skull are vital for movement and protection.",
+        "The Pacific Ocean is Earth’s biggest body of water. It contains the deepest known oceanic point. The trench there plunges over 11,000 meters deep.",
+        "Light moves at about 300,000 kilometers every second. This speed is used in calculating astronomical distances. It's the upper limit for matter and energy transmission."
+    ],
+
+    # prediction2 – humorous/informal
+    [
+        "Paris is basically France’s HQ for croissants and kissing. It’s where fashion and romance collide. Eiffel Tower selfies are practically mandatory.",
+        "Water hits its boiling drama at 100°C. Steam goes wild at this point. It's like the water’s ultimate rage quit.",
+        "That giant wall China built? You might catch it from orbit. It’s not just old — it’s legendary. Great for fending off invaders and impressing astronauts.",
+        "Shakespeare dropped Hamlet like it was hot. Emo prince, ghost dad, revenge vibes — classic. The drama levels are off the charts.",
+        "Photosynthesis: where leaves do light-eating magic. Sunlight in, sugar out. Trees are just nature’s green chefs.",
+        "Earth dances around the Sun in a never-ending loop. One lap takes a year. Seasons? Just part of the choreography.",
+        "Mount Everest towers like the Earth's nose poking space. It’s the ultimate hiking flex. But pack oxygen — it’s not beginner-friendly.",
+        "Skeletons are hardcore: 206 bones and not one is chill. They hold you up, keep your guts safe. The femur’s the kingpin of leg bones.",
+        "The Pacific Ocean? More like the planet’s water blanket. It's so deep, submarines get vertigo. That trench? Like nature’s bottomless pit.",
+        "Light is the universe’s speedster. At nearly 300,000 km/s, it's untouchable. Even sci-fi can’t beat that."
+    ],
+
+    # prediction3 – unrelated fun facts
+    [
+        "A group of flamingos is called a flamboyance. They get their color from eating shrimp. Flamingos can sleep while standing on one leg.",
+        "Bananas are technically berries. But strawberries aren’t. Nature loves exceptions.",
+        "Octopuses have three hearts. Two pump blood to the gills, one to the body. They also have blue blood.",
+        "Sloths can hold their breath for up to 40 minutes. That’s longer than dolphins. Slow and steady really does win sometimes.",
+        "Scotland’s national animal is the unicorn. It’s a symbol of purity and strength. You’ll find it on royal coats of arms.",
+        "Honey never spoils. Archaeologists found edible honey in ancient Egyptian tombs. It’s basically sugar in preservation mode.",
+        "Wombats poop cubes. It helps prevent their droppings from rolling away. Weirdly practical.",
+        "The Eiffel Tower can grow taller in summer. Heat expands the metal. It can gain about 15 centimeters.",
+        "A day on Venus is longer than a year there. It rotates very slowly. Plus, it spins in the opposite direction to most planets.",
+        "Sharks have been around longer than trees. They’ve existed for over 400 million years. They're true ancient survivors."
+    ]
     ]
 
     
     evalsuit = EvaluationSuite()
 
-    """scores_for_predictions = []
+    scores_for_predictions = []
     for pred in predictions:
         scores = evalsuit.evaluate_string_answers(pred, ground_truth)
-        scores_for_predictions.append(scores)"""
-    
+        scores_for_predictions.append(scores)
 
+    per_sample_values = evalsuit.evaluate_string_answers(predictions[1], ground_truth, return_individual=True)    
+    print(per_sample_values)
+    # Plot a histogram for each score list
+    for metric, values in per_sample_values.items():
+        plt.figure(figsize=(6, 4))
+        plt.hist(values, bins=10, edgecolor='black')
+        plt.title(f'Histogram of {metric}')
+        plt.xlabel(metric)
+        plt.ylabel('Frequency')
+        plt.grid(True)
+        plt.tight_layout()
+        plt.show()
+    
+    
 
     # Dictionary to hold the final JSON structure
     final_scores = {}
 
+    final_scores['ground_truth'] = ground_truth
+
     for i, pred in enumerate(predictions):
         scores = evalsuit.evaluate_string_answers(pred, ground_truth)
-        key_pred = f"prediction{i}"
-        key_scores = f"scores{i}"
-        final_scores[key_pred] = [{key_scores: to_serializable(scores)}]  
+        final_scores[f"prediction{i}"] = pred
+        final_scores[f"scores{i}"] = to_serializable(scores)
 
     with open("all_prediction_scores.json", "w") as f:
         json.dump(final_scores, f, indent=4)
 
     print("Saved as all_prediction_scores.json")
+    
+    scores = {}
+    for i in range(4):
+        scores[f"scores{i}"] = final_scores[f"scores{i}"]
+
+        
+    # Create DataFrame
+    df = pd.DataFrame(scores)
+
+    # Plot
+    df.plot(kind='bar', figsize=(14, 8))
+    plt.title("Scores Comparison by Metric")
+    plt.ylabel("Score")
+    plt.xlabel("Metric")
+    plt.xticks(rotation=45, ha='right')
+    plt.legend(title="Score Sets")
+    plt.tight_layout()
+    plt.grid(axis='y')
+
+    plt.show()
+
+
+
 
 
 
