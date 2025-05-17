@@ -9,7 +9,7 @@ from rouge_score import rouge_scorer
 from nltk.translate.meteor_score import meteor_score
 import Levenshtein
 import spacy
-from tabulate import tabulate
+import json
 from bert_score import score
 from sklearn.metrics.pairwise import cosine_similarity
 from nltk.tokenize import sent_tokenize
@@ -133,7 +133,15 @@ def compute_rouge(reference, prediction):
         'rougeL': scores['rougeL'].fmeasure
     }
 
-
+def to_serializable(obj):
+    if isinstance(obj, dict):
+        return {k: to_serializable(v) for k, v in obj.items()}
+    elif isinstance(obj, list):
+        return [to_serializable(v) for v in obj]
+    elif isinstance(obj, (np.float32, np.float64)):
+        return obj.item()
+    else:
+        return obj
 
 
 
@@ -225,7 +233,7 @@ class EvaluationSuite():
         } if semantic_scores else {}
 
 
-        results = {
+        return {
             "avg_bleu": avg_bleu,
             "avg_meteor": avg_meteor,
             "avg_levenshtein": avg_levenshtein,
@@ -235,15 +243,7 @@ class EvaluationSuite():
             "avg_cosine_similarity": avg_cosine,
             "avg_reasoning_coherence": avg_coherence
         }
-        flat_results = {}
-        for k, v in results.items():
-            if isinstance(v, dict):
-                for subk, subv in v.items():
-                    flat_results[f"{k}_{subk}"] = subv
-            else:
-                flat_results[k] = v
-        df = pd.DataFrame([flat_results])
-        return df
+        
 
 
 
@@ -262,18 +262,54 @@ def main():
 
     # Predicted answers from the LLM
     predictions = [
+        [
         "Paris is the capital of France.",
         "Water boils at one hundred degrees Celsius.",
         "The Great Wall of China can be seen from space.",
         "Hamlet was written by Shakespeare.",
         "Photosynthesis allows plants to produce their own food."
+        ],
+        [
+        "France’s main HQ for croissants and romance is Paris.",
+        "Water gets seriously steamed at 100°C — literally.",
+        "China built a wall so epic, even aliens might squint at it from orbit.",
+        "Shakespeare dropped the OG emo drama — it was called Hamlet.",
+        "Photosynthesis is how plants turn sunlight into salad — science magic."
+        ],
+        [
+        "A group of flamingos is called a flamboyance.",
+        "Bananas are berries, but strawberries aren't.",
+        "Octopuses have three hearts.",
+        "Sloths can hold their breath longer than dolphins.",
+        "Scotland’s national animal is the unicorn." 
+        ]    
     ]
 
     
     evalsuit = EvaluationSuite()
-    evals = evalsuit.evaluate_string_answers(predictions, ground_truth)
-    print("Our Evaluation Metrics are: ")
-    print(tabulate(evals, headers='keys', tablefmt='psql', showindex=False))
+
+    """scores_for_predictions = []
+    for pred in predictions:
+        scores = evalsuit.evaluate_string_answers(pred, ground_truth)
+        scores_for_predictions.append(scores)"""
+    
+
+
+    # Dictionary to hold the final JSON structure
+    final_scores = {}
+
+    for i, pred in enumerate(predictions):
+        scores = evalsuit.evaluate_string_answers(pred, ground_truth)
+        key_pred = f"prediction{i}"
+        key_scores = f"scores{i}"
+        final_scores[key_pred] = [{key_scores: to_serializable(scores)}]  
+
+    with open("all_prediction_scores.json", "w") as f:
+        json.dump(final_scores, f, indent=4)
+
+    print("Saved as all_prediction_scores.json")
+
+
 
 if __name__ == '__main__': 
     main()
