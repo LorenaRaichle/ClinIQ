@@ -260,17 +260,17 @@ class EvaluationSuite():
         bert_scores = evaluate_bertscore(ground_truth, predictions)
 
 
-        avg_bleu = np.mean(bleu_scores) if bleu_scores else 0
-        avg_meteor = np.mean(meteor_scores) if meteor_scores else 0
+        avg_bleu = float(np.mean(bleu_scores)) if bleu_scores else 0
+        avg_meteor = float(np.mean(meteor_scores)) if meteor_scores else 0
         avg_rouge = {
-            'rouge1': np.mean([s['rouge1'] for s in rouge_scores]) if rouge_scores else 0,
-            'rouge2': np.mean([s['rouge2'] for s in rouge_scores]) if rouge_scores else 0,
-            'rougeL': np.mean([s['rougeL'] for s in rouge_scores]) if rouge_scores else 0
+            'rouge1': float(np.mean([s['rouge1'] for s in rouge_scores])) if rouge_scores else 0,
+            'rouge2': float(np.mean([s['rouge2'] for s in rouge_scores])) if rouge_scores else 0,
+            'rougeL': float(np.mean([s['rougeL'] for s in rouge_scores])) if rouge_scores else 0
         }
-        avg_cosine = np.mean(cosine_sims) if cosine_sims else 0
-        avg_coherence = np.mean(coherence_scores) if coherence_scores else 0
+        avg_cosine = float(np.mean(cosine_sims)) if cosine_sims else 0
+        avg_coherence = float(np.mean(coherence_scores)) if coherence_scores else 0
         avg_semantic = {
-            k: np.mean([s[k] for s in semantic_scores]) if semantic_scores else 0
+            k: float(np.mean([s[k] for s in semantic_scores])) if semantic_scores else 0
             for k in semantic_scores[0].keys()
         } if semantic_scores else {}
 
@@ -388,6 +388,7 @@ def main():
 
     for i, pred in enumerate(predictions):
         scores = evalsuit.evaluate_string_answers(pred, ground_truth)
+        print(scores)
         final_scores[f"prediction{i}"] = pred
         final_scores[f"scores{i}"] = to_serializable(scores)
 
