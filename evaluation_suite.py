@@ -1,3 +1,4 @@
+import os
 import re
 import nltk
 import pandas as pd
@@ -151,7 +152,13 @@ class EvaluationSuite():
     Class that contains the evaluation scripts for each question type.
     """
         
-    def evaluate_discrete_answers(self, predictions, ground_truth):
+    def evaluate_discrete_answers(self, 
+                                  predictions, 
+                                  ground_truth,
+                                  experiment_name,
+                                  folder=None,
+                                  RAG_sources=None
+                                ):
         """
         Evaluates the accuracy of multiple-choice and true false predictions.
 
@@ -169,6 +176,11 @@ class EvaluationSuite():
             - 'precision' (float): Macro-averaged precision across all classes.
             - 'recall' (float): Macro-averaged recall across all classes.
         """
+        if folder:
+            folder_name = f"{folder}/{experiment_name}"
+        else:
+            folder_name = f"/content/drive/MyDrive/NLP/05_Results/{experiment_name}"
+        os.makedirs(folder_name, exist_ok=True) 
 
         # Generate confusion matrix
         labels = sorted(list(set(ground_truth + predictions)))  # Get all possible classes
@@ -179,12 +191,34 @@ class EvaluationSuite():
         disp.plot(cmap='Blues', xticks_rotation=45)
         plt.title("Confusion Matrix")
         plt.tight_layout()
-        plt.savefig("output/confusion_matrix_MC.png", dpi=300)  # You can change filename and resolution
+        plt.savefig(f"{folder_name}/confusion_matrix.png", dpi=300)  # You can change filename and resolution
         plt.show()
+
+        values = evaluate_classification(ground_truth, predictions)
+        with open(f"{folder_name}/eval_scores.json", "w") as f:
+            json.dump(values, f, indent=4)  # indent=4 for readable formatting
+
+        pred_n_gt = {
+            "predictions": predictions,
+            "ground_truth": ground_truth
+        }
+        with open(f"{folder_name}/label_n_preds.json", "w") as f:
+            json.dump(pred_n_gt, f, indent=4)  # indent=4 for readable formatting
+
+        if RAG_sources:
+            with open(f"{folder_name}/RAG_sources.json", "w") as f:
+                json.dump(RAG_sources, f, indent=4)  # indent=4 for readable formatting
 
         return evaluate_classification(ground_truth, predictions)
         
-    def evaluate_string_answers(self, predictions, ground_truth, return_individual=False):
+    def evaluate_string_answers(self, 
+                                predictions, 
+                                ground_truth, 
+                                experiment_name,
+                                folder=None,
+                                RAG_sources=None,
+                                return_individual=False
+                                ):
         """
         Evaluates a list of predicted strings against ground truth strings using multiple NLP metrics.
 
@@ -213,6 +247,13 @@ class EvaluationSuite():
         """
         assert len(predictions) == len(ground_truth)
 
+
+        if folder:
+            folder_name = f"{folder}/{experiment_name}"
+        else:
+            folder_name = f"/content/drive/MyDrive/NLP/05_Results/{experiment_name}"
+        os.makedirs(folder_name, exist_ok=True) 
+
         bleu_scores, meteor_scores, rouge_scores, cosine_sims, coherence_scores, semantic_scores = [], [], [], [], [], []
 
         for ref, pred in zip(ground_truth, predictions):
@@ -231,30 +272,32 @@ class EvaluationSuite():
             coherence_scores.append(float(evaluate_reasoning_flow(pred)))
             semantic_scores.append(semantic_match_score(ref, pred))
 
-        if return_individual:
-            rouge1_list = [d['rouge1'] for d in rouge_scores]
-            rouge2_list = [d['rouge2'] for d in rouge_scores]
-            rougeL_list = [d['rougeL'] for d in rouge_scores]
+        print("rouge_scores", rouge_scores)
+
+        rouge1_list = [d['rouge1'] if isinstance(d, dict) else 0 for d in rouge_scores]
+        rouge2_list = [d['rouge2'] if isinstance(d, dict) else 0 for d in rouge_scores]
+        rougeL_list = [d['rougeL'] if isinstance(d, dict) else 0 for d in rouge_scores]
 
 
-            word_similarity_list = [float(d['word_similarity']) for d in semantic_scores]
-            sentence_similarity_list = [float(d['sentence_similarity']) for d in semantic_scores]
-            paragraph_similarity_list = [float(d['paragraph_similarity']) for d in semantic_scores]
-            semantic_match_score_list = [float(d['semantic_match_score']) for d in semantic_scores]
+        word_similarity_list = [float(d['word_similarity']) if isinstance(d, dict) else 0 for d in semantic_scores]
+        sentence_similarity_list = [float(d['sentence_similarity']) if isinstance(d, dict) else 0 for d in semantic_scores]
+        paragraph_similarity_list = [float(d['paragraph_similarity']) if isinstance(d, dict) else 0 for d in semantic_scores]
+        semantic_match_score_list = [float(d['semantic_match_score']) if isinstance(d, dict) else 0 for d in semantic_scores]
 
-            return {
-                "bleu": bleu_scores,
-                "meteor": meteor_scores,
-                "rouge1": rouge1_list,
-                "rouge2": rouge2_list,
-                "rougeL": rougeL_list,
-                "cosine_similarity": cosine_sims,
-                "reasoning_coherence": coherence_scores,
-                "word_similarity": word_similarity_list,
-                "sentence_similarity": sentence_similarity_list,
-                "paragraph_similarity": paragraph_similarity_list,
-                "semantic_match_score": semantic_match_score_list
-            }
+        per_sentence_scores = {
+                    "bleu": bleu_scores,
+                    "meteor": meteor_scores,
+                    "rouge1": rouge1_list,
+                    "rouge2": rouge2_list,
+                    "rougeL": rougeL_list,
+                    "cosine_similarity": cosine_sims,
+                    "reasoning_coherence": coherence_scores,
+                    "word_similarity": word_similarity_list,
+                    "sentence_similarity": sentence_similarity_list,
+                    "paragraph_similarity": paragraph_similarity_list,
+                    "semantic_match_score": semantic_match_score_list
+            } 
+
 
             
         bert_scores = evaluate_bertscore(ground_truth, predictions)
@@ -275,15 +318,45 @@ class EvaluationSuite():
             for k in semantic_scores[0].keys()
         } if semantic_scores else {}
 
-        return {
-            "avg_bleu": avg_bleu,
-            "avg_meteor": avg_meteor,
-            **avg_rouge,
-            **avg_semantic,
-            **bert_scores,
-            "avg_cosine_similarity": avg_cosine,
-            "avg_reasoning_coherence": avg_coherence
+        averaged_scores = {
+                "avg_bleu": avg_bleu,
+                "avg_meteor": avg_meteor,
+                **avg_rouge,
+                **avg_semantic,
+                **bert_scores,
+                "avg_cosine_similarity": avg_cosine,
+                "avg_reasoning_coherence": avg_coherence
+            }
+
+        pred_n_gt = {
+            "predictions": predictions,
+            "ground_truth": ground_truth
         }
+        with open(f"{folder_name}/label_n_preds.json", "w") as f:
+            json.dump(pred_n_gt, f, indent=4)  # indent=4 for readable formatting
+
+        if RAG_sources:
+            with open(f"{folder_name}/RAG_sources.json", "w") as f:
+                json.dump(RAG_sources, f, indent=4)  # indent=4 for readable formatting
+
+        
+        with open(f"{folder_name}/per_sentence_scores.json", "w") as f:
+            json.dump(per_sentence_scores, f, indent=4)  # indent=4 for readable formatting
+        
+        
+        with open(f"{folder_name}/averaged_scores.json", "w") as f:
+            json.dump(averaged_scores, f, indent=4)  # indent=4 for readable formatting
+        
+
+        if return_individual == "both":
+            return {
+                "per_sentence_scores": per_sentence_scores,
+                "averaged_scores": averaged_scores
+            }
+        if return_individual:
+            return per_sentence_scores
+        else:
+            return averaged_scores
 
 
 
@@ -375,15 +448,12 @@ def main():
     evalsuit = EvaluationSuite()
 
     print("Hier läufts irgendwie nicht")
-    print(evalsuit.evaluate_string_answers(pred_test, gt_test))
+    print(evalsuit.evaluate_string_answers(pred_test, gt_test, experiment_name="testNA", folder="output", RAG_sources={"med": 2, "test": 3}))
 
     scores_for_predictions = []
-    for pred in predictions:
-        scores = evalsuit.evaluate_string_answers(pred, ground_truth)
+    for i, pred in enumerate(predictions):
+        scores = evalsuit.evaluate_string_answers(pred, ground_truth, experiment_name=f"preds_{i}", folder="output", RAG_sources={"med": 2, "test": 3})
         scores_for_predictions.append(scores)
-
-    per_sample_values = evalsuit.evaluate_string_answers(predictions[1], ground_truth, return_individual=True)    
-    print(per_sample_values)
   
     
     
@@ -394,7 +464,7 @@ def main():
     final_scores['ground_truth'] = ground_truth
 
     for i, pred in enumerate(predictions):
-        scores = evalsuit.evaluate_string_answers(pred, ground_truth)
+        scores = evalsuit.evaluate_string_answers(pred, ground_truth, experiment_name=f"predstest_{i}", folder="output", RAG_sources={"med": 2, "test": 3})
         print(scores)
         final_scores[f"prediction{i}"] = pred
         final_scores[f"scores{i}"] = to_serializable(scores)
