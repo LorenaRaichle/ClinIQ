@@ -227,8 +227,8 @@ class EvaluationSuite():
             bleu_scores.append(compute_bleu(ref, pred))
             meteor_scores.append(meteor_score([ref.split()], pred.split()))
             rouge_scores.append(compute_rouge(ref, pred)) 
-            cosine_sims.append(compute_cosine_similarity(ref, pred))
-            coherence_scores.append(evaluate_reasoning_flow(pred))
+            cosine_sims.append(float(compute_cosine_similarity(ref, pred)))
+            coherence_scores.append(float(evaluate_reasoning_flow(pred)))
             semantic_scores.append(semantic_match_score(ref, pred))
 
         if return_individual:
@@ -237,10 +237,10 @@ class EvaluationSuite():
             rougeL_list = [d['rougeL'] for d in rouge_scores]
 
 
-            word_similarity_list = [d['word_similarity'] for d in semantic_scores]
-            sentence_similarity_list = [d['sentence_similarity'] for d in semantic_scores]
-            paragraph_similarity_list = [d['paragraph_similarity'] for d in semantic_scores]
-            semantic_match_score_list = [d['semantic_match_score'] for d in semantic_scores]
+            word_similarity_list = [float(d['word_similarity']) for d in semantic_scores]
+            sentence_similarity_list = [float(d['sentence_similarity']) for d in semantic_scores]
+            paragraph_similarity_list = [float(d['paragraph_similarity']) for d in semantic_scores]
+            semantic_match_score_list = [float(d['semantic_match_score']) for d in semantic_scores]
 
             return {
                 "bleu": bleu_scores,
@@ -258,7 +258,6 @@ class EvaluationSuite():
 
             
         bert_scores = evaluate_bertscore(ground_truth, predictions)
-        print("bert_scores: ", bert_scores)
 
 
         avg_bleu = np.mean(bleu_scores) if bleu_scores else 0
@@ -378,16 +377,7 @@ def main():
 
     per_sample_values = evalsuit.evaluate_string_answers(predictions[1], ground_truth, return_individual=True)    
     print(per_sample_values)
-    # Plot a histogram for each score list
-    for metric, values in per_sample_values.items():
-        plt.figure(figsize=(6, 4))
-        plt.hist(values, bins=10, edgecolor='black')
-        plt.title(f'Histogram of {metric}')
-        plt.xlabel(metric)
-        plt.ylabel('Frequency')
-        plt.grid(True)
-        plt.tight_layout()
-        plt.show()
+  
     
     
 

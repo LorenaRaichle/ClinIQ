@@ -37,7 +37,7 @@
         "recall": 1.0,
         "f1": 1.0,
         "avg_cosine_similarity": 1.0,
-        "avg_reasoning_coherence": 0.7616708278656006
+        "avg_reasoning_coherence": 0.761670857667923
     },
     "prediction1": [
         "Paris is the capital city of France. It is famous for its museums and historical sites. Tourists often visit the Eiffel Tower and the Louvre.",
@@ -64,8 +64,8 @@
         "precision": 0.9149672389030457,
         "recall": 0.9152840375900269,
         "f1": 0.9151029586791992,
-        "avg_cosine_similarity": 0.9571272730827332,
-        "avg_reasoning_coherence": 0.7692931890487671
+        "avg_cosine_similarity": 0.9571272134780884,
+        "avg_reasoning_coherence": 0.7692932426929474
     },
     "prediction2": [
         "Paris is basically France\u2019s HQ for croissants and kissing. It\u2019s where fashion and romance collide. Eiffel Tower selfies are practically mandatory.",
@@ -92,8 +92,8 @@
         "precision": 0.862728476524353,
         "recall": 0.8737868070602417,
         "f1": 0.8681653141975403,
-        "avg_cosine_similarity": 0.8936802744865417,
-        "avg_reasoning_coherence": 0.7471199035644531
+        "avg_cosine_similarity": 0.8936802983283997,
+        "avg_reasoning_coherence": 0.7471198976039887
     },
     "prediction3": [
         "A group of flamingos is called a flamboyance. They get their color from eating shrimp. Flamingos can sleep while standing on one leg.",
@@ -120,7 +120,7 @@
         "precision": 0.8434462547302246,
         "recall": 0.8360137939453125,
         "f1": 0.8396223187446594,
-        "avg_cosine_similarity": 0.8728006482124329,
-        "avg_reasoning_coherence": 0.7857529520988464
+        "avg_cosine_similarity": 0.8728006541728973,
+        "avg_reasoning_coherence": 0.7857529640197753
     }
 }
