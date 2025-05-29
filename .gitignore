@@ -25,12 +25,17 @@ Desktop.ini
 # Recycle bin
 $RECYCLE.BIN/
 
-# Ignore dataset JSON files
-data/full_dataset.json
-data/train_dataset.json
-data/test_dataset.json
-data/train_dataset_rag.json
 
+data/processed/Pubmed
+ data/processed/testdata/test_dataset_balanced_shuffled.json
+ data/processed/trainingdata/train_dataset_balanced_shuffled.json
+data/processed/testdata
+data/processed/trainingdata
+data/TODO?
+
+data/raw
+
+.idea
 .gitignore
 venv_clin/
 
@@ -73,3 +78,4 @@ venv/
 
 # Environment files (sensitive information)
 .env
+.idea/
