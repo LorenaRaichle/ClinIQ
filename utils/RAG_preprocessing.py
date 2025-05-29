@@ -1,5 +1,5 @@
 """
-preprocessing_RAG.py
+RAG_preprocessing.py
 
 This file contains utility classes and functions to prepare our training and the PubMed datasets for RAG-based experiments.
 It focuses on assigning unique, type-specific IDs and checking source information and file stats in the training data.
