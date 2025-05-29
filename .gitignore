@@ -38,6 +38,7 @@ data/raw
 .idea
 .gitignore
 venv_clin/
+.env
 
 # Windows shortcut files
 *.lnk
