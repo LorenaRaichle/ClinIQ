@@ -145,3 +145,5 @@ class RAGPipeline:
         with open(output_path, "w") as f:
             json.dump(results, f, indent=4)
         print(f"Saved {len(results)} results to {output_path}")
+
+
