@@ -61,8 +61,12 @@ class RAGPipeline:
 
     def _build_qa_chain(self):
         if self.model_pipeline is None:
+            print("Loading model into memory.")
             pipe = self._load_deepseek_model()
             self.model_pipeline = HuggingFacePipeline(pipeline=pipe)
+        else:
+            print("Using shared model pipeline.")
+
 
         llm = self.model_pipeline
         prompt = self._get_prompt()
