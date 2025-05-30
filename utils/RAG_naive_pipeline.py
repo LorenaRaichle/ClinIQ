@@ -70,11 +70,13 @@ class RAGPipeline:
         def log_and_format(inputs, prompt):
             content = []
             if isinstance(self.data, dict) and all(isinstance(v, list) for v in self.data.values()):
-                id_index = {ex["id"]: ex for group in self.data.values() for ex in group}
+                id_index = {ex["id"]: ex for group in self.data.values() for ex in group if
+                            isinstance(ex, dict) and "id" in ex}
             elif isinstance(self.data, list):
-                id_index = {ex["id"]: ex for ex in self.data}
+                id_index = {ex["id"]: ex for ex in self.data if isinstance(ex, dict) and "id" in ex}
             else:
-                raise TypeError("Unsupported format for self.data. Expected dict of lists or flat list.")
+                raise TypeError(
+                    f"Unsupported type for self.data: {type(self.data)}. Expected dict of lists or list of dicts.")
 
             for doc in inputs['context']:
                 doc_id = doc.metadata['id']
