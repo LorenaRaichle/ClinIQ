@@ -9,7 +9,7 @@ from pinecone import Pinecone, ServerlessSpec
 
 from config import INDEX_NAME, DIMENSION, EMBEDDING_MODEL_NAME
 from .RAG_metadata import extract_keywords_and_entities, extract_age_gender
-
+from huggingface_hub import get_token
 
 #load_dotenv()
 #pinecone_key = os.getenv("PINECONE")
@@ -47,7 +47,9 @@ class RAGIndexer:
     def __init__(self, index, embedding_model_name=EMBEDDING_MODEL_NAME):
         """Initialize with Pinecone index and embedding model."""
         self.index = index
-        self.model = SentenceTransformer(embedding_model_name)
+        hf_token = get_token()
+        self.model = SentenceTransformer(embedding_model_name, use_auth_token=hf_token)
+
 
     def insert_questions(self, data: dict):
         """Encodes and inserts questions + metadata into Pinecone.
