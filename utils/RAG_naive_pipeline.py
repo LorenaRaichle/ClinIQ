@@ -22,6 +22,7 @@ class RAGPipeline:
         self.k = k
         self.pc = pc
         self.embedding_pipe = embedding_pipe or HuggingFaceEmbeddings(model_name=EMBEDDING_MODEL_NAME)
+        self.model_pipeline = None
         self.index = self.pc.Index(INDEX_NAME)
         self.retriever = self._get_retriever()
         self.chain = self._build_qa_chain()
