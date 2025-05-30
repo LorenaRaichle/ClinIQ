@@ -80,10 +80,10 @@ class RAGPipeline:
                 doc_id = doc.metadata['id']
 
                 try:
-                    prefix, idx_str = doc_id.split("_", 1)
-                    if prefix in {"mc", "sa", "tf", "mh"}:
-                        idx = int(idx_str)
 
+                    prefix, idx_str = doc_id.split("_", 1)
+                    if prefix != "pubmed":
+                        idx = int(idx_str)
                         if prefix == "mc":
                             if idx >= len(self.full_data["multiple_choice"]):
                                 raise IndexError(f"Index {idx} out of range for multiple_choice")
