@@ -70,8 +70,7 @@ class RAGPipeline:
         def log_and_format(inputs, prompt):
             content = []
 
-
-            id_index = {ex["id"]: ex for ex in self.data}
+            id_index = {ex["id"]: ex for group in self.data.values() for ex in group}
 
             for doc in inputs['context']:
                 doc_id = doc.metadata['id']
