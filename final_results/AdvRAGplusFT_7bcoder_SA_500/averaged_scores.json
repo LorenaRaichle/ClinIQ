@@ -1,0 +1,16 @@
+{
+    "avg_bleu": 0.2056620840214368,
+    "avg_meteor": 0.4023461251094692,
+    "rouge1": 0.4007281791497344,
+    "rouge2": 0.31375556784405273,
+    "rougeL": 0.3549823949195244,
+    "word_similarity": 0.9128713011741638,
+    "sentence_similarity": 0.8665794620513916,
+    "paragraph_similarity": 0.9128713011741638,
+    "semantic_match_score": 0.8989837765693665,
+    "precision": 0.8434144258499146,
+    "recall": 0.8679085969924927,
+    "f1": 0.8539949655532837,
+    "avg_cosine_similarity": 0.9128712405264378,
+    "avg_reasoning_coherence": 0.7943429054021836
+}
