@@ -16,11 +16,11 @@ pinecone_key = os.getenv("PINECONE")
 pc = Pinecone(api_key=pinecone_key, environment="us-west1-gcp")
 
 
-
-def init_index():
-    """Initialize Pinecone index.
-    Input: None (uses INDEX_NAME from config)
-    Output: Pinecone Index object (connected to the existing or newly created index)
+def init_index(pc):
+    """
+    Initialize Pinecone index using passed Pinecone client.
+    Input: pc (Pinecone client instance)
+    Output: Pinecone Index object
     """
     indices = [index["name"] for index in pc.list_indexes()]
     if INDEX_NAME not in indices:
@@ -32,7 +32,7 @@ def init_index():
         )
         print(f"Index '{INDEX_NAME}' created.")
     else:
-        print(f"ℹIndex '{INDEX_NAME}' already exists.")
+        print(f"ℹ Index '{INDEX_NAME}' already exists.")
     return pc.Index(INDEX_NAME)
 
 
