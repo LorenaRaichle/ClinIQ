@@ -69,28 +69,31 @@ class RAGPipeline:
 
         def log_and_format(inputs, prompt):
             content = []
-            if isinstance(self.data, dict) and all(isinstance(v, list) for v in self.data.values()):
-                id_index = {ex["id"]: ex for group in self.data.values() for ex in group if
-                            isinstance(ex, dict) and "id" in ex}
-            elif isinstance(self.data, list):
-                id_index = {ex["id"]: ex for ex in self.data if isinstance(ex, dict) and "id" in ex}
-            else:
-                raise TypeError(
-                    f"Unsupported type for self.data: {type(self.data)}. Expected dict of lists or list of dicts.")
 
             for doc in inputs['context']:
                 doc_id = doc.metadata['id']
-                example = id_index.get(doc_id)
 
-                if not example:
-                    raise KeyError(f"No example found with id '{doc_id}'")
+                try:
+                    if doc_id.startswith("mc"):
+                        example = self.data["multiple_choice"][int(doc_id[3:])]
+                        content.append(example.get('question', '') + " " + example.get('correct_answer', ''))
+                    elif doc_id.startswith("sa"):
+                        example = self.data["short_answer"][int(doc_id[3:])]
+                        content.append(example.get('question', ''))
+                    elif doc_id.startswith("tf"):
+                        example = self.data["true_false"][int(doc_id[3:])]
+                        content.append(example.get('question', ''))
+                    elif doc_id.startswith("mh"):
+                        example = self.data["multi_hop"][int(doc_id[3:])]
+                        content.append(example.get('question', ''))
+                    else:
+                        print(f"[Warning] Unrecognized ID format: {doc_id}")
+                except (IndexError, ValueError, KeyError) as e:
+                    print(f"[Warning] Could not find matching example for ID '{doc_id}': {e}")
+                    continue
 
-                qtype = example["type"]
-
-                if qtype == "multiple_choice":
-                    content.append(example.get('question', '') + " " + example.get('correct_answer', ''))
-                elif qtype in ["true_false", "short_answer", "multi_hop"]:
-                    content.append(example.get('question', ''))
+            if not content:
+                print("[Warning] No content extracted from retrieved docs.")
 
             inputs['context'] = "\n".join(content)
             return prompt.format(**inputs)
