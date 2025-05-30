@@ -78,43 +78,45 @@ class RAGPipeline:
 
             for doc in inputs['context']:
                 doc_id = doc.metadata['id']
-                # look up retrieved id in full data train set
+
                 try:
-                    idx = int(doc_id[3:])
-                    if doc_id.startswith("mc"):
-                        if idx >= len(self.full_data["multiple_choice"]):
-                            raise IndexError(f"Index {idx} out of range for multiple_choice")
-                        example = self.full_data["multiple_choice"][idx]
-                        content.append(example.get('question', '') + " " + example.get('correct_answer', ''))
+                    prefix, idx_str = doc_id.split("_", 1)
+                    if prefix in {"mc", "sa", "tf", "mh"}:
+                        idx = int(idx_str)
 
-                    elif doc_id.startswith("sa"):
-                        if idx >= len(self.full_data["short_answer"]):
-                            raise IndexError(f"Index {idx} out of range for short_answer")
-                        example = self.full_data["short_answer"][idx]
-                        content.append(example.get('question', ''))
+                        if prefix == "mc":
+                            if idx >= len(self.full_data["multiple_choice"]):
+                                raise IndexError(f"Index {idx} out of range for multiple_choice")
+                            example = self.full_data["multiple_choice"][idx]
+                            content.append(example.get('question', '') + " " + example.get('correct_answer', ''))
 
-                    elif doc_id.startswith("tf"):
-                        if idx >= len(self.full_data["true_false"]):
-                            raise IndexError(f"Index {idx} out of range for true_false")
-                        example = self.full_data["true_false"][idx]
-                        content.append(example.get('question', ''))
+                        elif prefix == "sa":
+                            if idx >= len(self.full_data["short_answer"]):
+                                raise IndexError(f"Index {idx} out of range for short_answer")
+                            example = self.full_data["short_answer"][idx]
+                            content.append(example.get('question', ''))
 
-                    elif doc_id.startswith("mh"):
-                        if idx >= len(self.full_data["multi_hop"]):
-                            raise IndexError(f"Index {idx} out of range for multi_hop")
-                        example = self.full_data["multi_hop"][idx]
-                        content.append(example.get('question', ''))
+                        elif prefix == "tf":
+                            if idx >= len(self.full_data["true_false"]):
+                                raise IndexError(f"Index {idx} out of range for true_false")
+                            example = self.full_data["true_false"][idx]
+                            content.append(example.get('question', ''))
 
-                    elif doc_id.startswith("pubmed"):
-                        doc = self.pubmed_data.get(id)
+                        elif prefix == "mh":
+                            if idx >= len(self.full_data["multi_hop"]):
+                                raise IndexError(f"Index {idx} out of range for multi_hop")
+                            example = self.full_data["multi_hop"][idx]
+                            content.append(example.get('question', ''))
+
+                    elif prefix == "pubmed":
+                        doc = self.pubmed_data.get(doc_id)
                         if doc:
                             content.append(doc.get("content", ""))
-
                         else:
-                            print(f"[Warning] pubmed ID '{id}' not found in pubmed_data.")
+                            print(f"[Warning] pubmed ID '{doc_id}' not found in pubmed_data.")
 
                     else:
-                        print(f"[Warning] Unrecognized ID format: {doc_id}")
+                        print(f"[Warning] Unrecognized ID prefix in: {doc_id}")
 
                 except Exception as e:
                     print(f"[Warning] Skipping doc with id '{doc_id}': {e}")

@@ -61,8 +61,7 @@ class DataPaths:
         "pubmed_part2" : BASE_PATH / "raw/pubmed_partial_2.jsonl",
         "pubmed_raw": BASE_PATH / "raw/combined_pubmed.jsonl",
         "pubmed_processed_all": BASE_PATH / "processed/Pubmed/pubmed_processed.jsonl", # only the id is added
-        "pubmed_preprocessed_250k": BASE_PATH / "processed/Pubmed/pubmed_sample_prepro.jsonl" # added "clean_content" field (spacy processed) for topic modeling on subset
-        
+        "pubmed_preprocessed_250k": BASE_PATH / "processed/Pubmed/pubmed_sample_prepro.jsonl", # added "clean_content" field (spacy processed) for topic modeling on subset
         
 
     }
