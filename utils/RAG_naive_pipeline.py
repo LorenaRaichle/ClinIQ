@@ -74,22 +74,36 @@ class RAGPipeline:
                 doc_id = doc.metadata['id']
 
                 try:
+                    idx = int(doc_id[3:])
                     if doc_id.startswith("mc"):
-                        example = self.data["multiple_choice"][int(doc_id[3:])]
+                        if idx >= len(self.data["multiple_choice"]):
+                            raise IndexError(f"Index {idx} out of range for multiple_choice")
+                        example = self.data["multiple_choice"][idx]
                         content.append(example.get('question', '') + " " + example.get('correct_answer', ''))
+
                     elif doc_id.startswith("sa"):
-                        example = self.data["short_answer"][int(doc_id[3:])]
+                        if idx >= len(self.data["short_answer"]):
+                            raise IndexError(f"Index {idx} out of range for short_answer")
+                        example = self.data["short_answer"][idx]
                         content.append(example.get('question', ''))
+
                     elif doc_id.startswith("tf"):
-                        example = self.data["true_false"][int(doc_id[3:])]
+                        if idx >= len(self.data["true_false"]):
+                            raise IndexError(f"Index {idx} out of range for true_false")
+                        example = self.data["true_false"][idx]
                         content.append(example.get('question', ''))
+
                     elif doc_id.startswith("mh"):
-                        example = self.data["multi_hop"][int(doc_id[3:])]
+                        if idx >= len(self.data["multi_hop"]):
+                            raise IndexError(f"Index {idx} out of range for multi_hop")
+                        example = self.data["multi_hop"][idx]
                         content.append(example.get('question', ''))
+
                     else:
                         print(f"[Warning] Unrecognized ID format: {doc_id}")
-                except (IndexError, ValueError, KeyError) as e:
-                    print(f"[Warning] Could not find matching example for ID '{doc_id}': {e}")
+
+                except Exception as e:
+                    print(f"[Warning] Skipping doc with id '{doc_id}': {e}")
                     continue
 
             if not content:
