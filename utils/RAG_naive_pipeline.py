@@ -17,9 +17,10 @@ from tqdm import tqdm
 
 
 class RAGPipeline:
-    def __init__(self, test_data, full_data, k=5, pc=None, embedding_pipe=None, model_pipeline=None):
+    def __init__(self, test_data, full_data, pubmed_data=None,  k=5, pc=None, embedding_pipe=None, model_pipeline=None):
         self.test_data = test_data
         self.full_data = full_data
+        self.pubmed_data = pubmed_data or {}
         self.k = k
         self.pc = pc
         self.embedding_pipe = embedding_pipe or HuggingFaceEmbeddings(model_name=EMBEDDING_MODEL_NAME)
@@ -103,6 +104,14 @@ class RAGPipeline:
                             raise IndexError(f"Index {idx} out of range for multi_hop")
                         example = self.full_data["multi_hop"][idx]
                         content.append(example.get('question', ''))
+
+                    elif doc_id.startswith("pubmed"):
+                        doc = self.pubmed_data.get(id)
+                        if doc:
+                            content.append(doc.get("content", ""))
+
+                        else:
+                            print(f"[Warning] pubmed ID '{id}' not found in pubmed_data.")
 
                     else:
                         print(f"[Warning] Unrecognized ID format: {doc_id}")
