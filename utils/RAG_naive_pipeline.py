@@ -17,8 +17,9 @@ from tqdm import tqdm
 
 
 class RAGPipeline:
-    def __init__(self, data, k=5, pc=None, embedding_pipe=None, model_pipeline=None):
-        self.data = data
+    def __init__(self, test_data, full_data, k=5, pc=None, embedding_pipe=None, model_pipeline=None):
+        self.test_data = test_data
+        self.full_data = full_data
         self.k = k
         self.pc = pc
         self.embedding_pipe = embedding_pipe or HuggingFaceEmbeddings(model_name=EMBEDDING_MODEL_NAME)
@@ -76,31 +77,31 @@ class RAGPipeline:
 
             for doc in inputs['context']:
                 doc_id = doc.metadata['id']
-
+                # look up retrieved id in full data train set
                 try:
                     idx = int(doc_id[3:])
                     if doc_id.startswith("mc"):
-                        if idx >= len(self.data["multiple_choice"]):
+                        if idx >= len(self.full_data["multiple_choice"]):
                             raise IndexError(f"Index {idx} out of range for multiple_choice")
-                        example = self.data["multiple_choice"][idx]
+                        example = self.full_data["multiple_choice"][idx]
                         content.append(example.get('question', '') + " " + example.get('correct_answer', ''))
 
                     elif doc_id.startswith("sa"):
-                        if idx >= len(self.data["short_answer"]):
+                        if idx >= len(self.full_data["short_answer"]):
                             raise IndexError(f"Index {idx} out of range for short_answer")
-                        example = self.data["short_answer"][idx]
+                        example = self.full_data["short_answer"][idx]
                         content.append(example.get('question', ''))
 
                     elif doc_id.startswith("tf"):
-                        if idx >= len(self.data["true_false"]):
+                        if idx >= len(self.full_data["true_false"]):
                             raise IndexError(f"Index {idx} out of range for true_false")
-                        example = self.data["true_false"][idx]
+                        example = self.full_data["true_false"][idx]
                         content.append(example.get('question', ''))
 
                     elif doc_id.startswith("mh"):
-                        if idx >= len(self.data["multi_hop"]):
+                        if idx >= len(self.full_data["multi_hop"]):
                             raise IndexError(f"Index {idx} out of range for multi_hop")
-                        example = self.data["multi_hop"][idx]
+                        example = self.full_data["multi_hop"][idx]
                         content.append(example.get('question', ''))
 
                     else:
