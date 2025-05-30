@@ -5,15 +5,15 @@ import json
 from tqdm import tqdm
 from sentence_transformers import SentenceTransformer
 from pinecone import Pinecone, ServerlessSpec
-from dotenv import load_dotenv
+#from dotenv import load_dotenv
 
 from config import INDEX_NAME, DIMENSION, EMBEDDING_MODEL_NAME
 from .RAG_metadata import extract_keywords_and_entities, extract_age_gender
 
 
-load_dotenv()
-pinecone_key = os.getenv("PINECONE")
-pc = Pinecone(api_key=pinecone_key, environment="us-west1-gcp")
+#load_dotenv()
+#pinecone_key = os.getenv("PINECONE")
+#pc = Pinecone(api_key=pinecone_key, environment="us-west1-gcp")
 
 
 def init_index(pc):
