@@ -40,6 +40,7 @@ data/raw
 venv_clin/
 .env
 
+models
 # Windows shortcut files
 *.lnk
 
