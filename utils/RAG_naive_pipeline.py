@@ -12,7 +12,6 @@ from langchain_community.embeddings import HuggingFaceEmbeddings
 from langchain_pinecone import PineconeVectorStore
 
 from config import INDEX_NAME, EMBEDDING_MODEL_NAME
-from utils.RAG_pinecone import pc
 
 from tqdm import tqdm
 
