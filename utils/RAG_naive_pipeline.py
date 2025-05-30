@@ -17,11 +17,11 @@ from tqdm import tqdm
 
 
 class RAGPipeline:
-    def __init__(self, data, k=5, pc=None):
+    def __init__(self, data, k=5, pc=None, embedding_pipe=None):
         self.data = data
         self.k = k
         self.pc = pc
-        self.embedding_pipe = HuggingFaceEmbeddings(model_name=EMBEDDING_MODEL_NAME)
+        self.embedding_pipe = embedding_pipe or HuggingFaceEmbeddings(model_name=EMBEDDING_MODEL_NAME)
         self.index = self.pc.Index(INDEX_NAME)
         self.retriever = self._get_retriever()
         self.chain = self._build_qa_chain()
