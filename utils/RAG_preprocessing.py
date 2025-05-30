@@ -42,12 +42,14 @@ class DataPaths:
     Centralized class for managing dataset paths.
     """
     BASE_PATH = Path(__file__).resolve().parents[1] / "data"
+    EXPERIMENT_PATH = Path(__file__).resolve().parents[1] / "content"
 
     paths = {
         # test data
         "test_raw": BASE_PATH / "raw/test_dataset.json",
         # final testset: shuffled, balanced, with id
         "test_processed" : BASE_PATH /"processed/testdata/test_dataset_w_id.json", # final test data set
+        "test_balanced_shuffled": BASE_PATH / "processed/testdata/test_dataset_balanced_shuffled.json",
 
         # training data
         "train_raw": BASE_PATH / "raw/train_dataset.json",
@@ -60,8 +62,25 @@ class DataPaths:
         "pubmed_raw": BASE_PATH / "raw/combined_pubmed.jsonl",
         "pubmed_processed_all": BASE_PATH / "processed/Pubmed/pubmed_processed.jsonl", # only the id is added
         "pubmed_preprocessed_250k": BASE_PATH / "processed/Pubmed/pubmed_sample_prepro.jsonl" # added "clean_content" field (spacy processed) for topic modeling on subset
+        
+        
 
     }
+
+    @staticmethod
+    def get_k_experiment_output_path(k: int, filename: str = None):
+        """
+        test runs to find optimal k (retrieved contexts)
+        Returns a path under the experiment folder for a specific `k` value.
+        Example: /.../content/k_experiments/k_5/MC_1000_generated_answers.json
+        """
+        base_dir = DataPaths.EXPERIMENT_PATH / "k_experiments" / f"k_{k}"
+        base_dir.mkdir(parents=True, exist_ok=True)
+
+        if filename is None:
+            filename = f"MC_1000_generated_answers_k{k}.json"
+
+        return base_dir / filename
 
     @staticmethod
     def load(name):

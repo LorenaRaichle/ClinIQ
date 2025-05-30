@@ -1,12 +1,32 @@
 # RAG_metadata.py
+from pathlib import Path
 
 import spacy
 import re
 from collections import Counter
+import spacy.cli
 
-# Load your custom spaCy NER model for biomedical entities
-MODEL_PATH = "/content/drive/MyDrive/NLP/03_Training/en_ner_bc5cdr_md-0.5.4/en_ner_bc5cdr_md/en_ner_bc5cdr_md-0.5.4"
-nlp = spacy.load(MODEL_PATH)
+#  spaCy NER model for biomedical entities
+# MODEL_NAME = "en_ner_bc5cdr_md"
+#
+# try:
+#     nlp = spacy.load(MODEL_NAME)
+# except OSError:
+#     print(f"Model '{MODEL_NAME}' not found.")
+#     spacy.cli.download(MODEL_NAME)
+#     nlp = spacy.load(MODEL_NAME)
+
+
+
+# or check models directory:
+MODEL_PATH = Path(__file__).resolve().parent.parent / "models/en_ner_bc5cdr_md-0.5.4"
+
+try:
+    nlp = spacy.load(str(MODEL_PATH))
+except Exception as e:
+    print(f"Failed to load model from {MODEL_PATH}")
+    raise e
+
 
 def extract_keywords_and_entities(text):
     doc = nlp(text)

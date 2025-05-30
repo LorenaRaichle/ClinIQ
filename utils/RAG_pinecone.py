@@ -8,7 +8,8 @@ from pinecone import Pinecone, ServerlessSpec
 from dotenv import load_dotenv
 
 from config import INDEX_NAME, DIMENSION, EMBEDDING_MODEL_NAME
-from RAG_metadata import extract_keywords_and_entities, extract_age_gender
+from .RAG_metadata import extract_keywords_and_entities, extract_age_gender
+
 
 load_dotenv()
 pinecone_key = os.getenv("PINECONE")
@@ -35,7 +36,7 @@ def init_index():
     return pc.Index(INDEX_NAME)
 
 
-# === 3. Indexer Class ===
+
 class RAGIndexer:
     """Handles encoding and upserting QA data into Pinecone.
 
@@ -100,3 +101,9 @@ class RAGIndexer:
         print(f"Upserted {len(vectors_to_upsert)} items to Pinecone.")
 
 
+
+    def describe_index(self):
+        """Returns basic index statistics like vector count and metadata configuration."""
+        stats = self.index.describe_index_stats()
+        print(stats)
+        return stats
