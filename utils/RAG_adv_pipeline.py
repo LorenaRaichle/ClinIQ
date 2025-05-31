@@ -120,7 +120,7 @@ class RAGAdvPipeline:
 
                 return docs[:k]
 
-        return HybridRetriever(self.index, self.embedder)
+        return HybridRetriever(self.index, self.embedding_pipe)
 
 
 
