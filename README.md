@@ -1,6 +1,6 @@
 # clin_IQ: A Medical Expert-Level Question-Answering System
 
-![Project Overview](https://github.com/LorenaRaichle/ClinIQ/main/visuals/Project%20Overview.png)
+![Image](https://github.com/LorenaRaichle/ClinIQ/main/visuals/Project%20Overview.png)
 
 
 
