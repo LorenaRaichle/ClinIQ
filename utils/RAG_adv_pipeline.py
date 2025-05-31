@@ -1,6 +1,7 @@
 # RAG_adv_pipeline.py
 
 import os
+from peft import PeftModel
 import torch
 import json
 from transformers import pipeline, AutoTokenizer, AutoModelForCausalLM
@@ -143,8 +144,15 @@ class RAGAdvPipeline:
             model_path = "/content/drive/MyDrive/LORENA/RAG/DS/ft_multiple_choice_v2_balanced_and_shuffled"
            # model_path = "/content/drive/MyDrive/NLP/03_Training/ft_v21_balanced/ft_multiple_choice_v2_balanced_and_shuffled"
 
-            tokenizer = AutoTokenizer.from_pretrained(model_path, local_files_only=True)
-            model = AutoModelForCausalLM.from_pretrained(model_path, local_files_only=True, torch_dtype=torch.float16)
+            base_model_name = "deepseek-ai/deepseek-coder-7b-instruct-v1.5"
+
+            adapter_path = "/content/drive/MyDrive/LORENA/RAG/DS/ft_multiple_choice_v2_balanced_and_shuffled"
+
+            # Load base model & tokenizer
+            tokenizer = AutoTokenizer.from_pretrained(base_model_name)
+            base_model = AutoModelForCausalLM.from_pretrained(base_model_name, torch_dtype=torch.float16)
+
+            model = PeftModel.from_pretrained(base_model, adapter_path)
 
             gen_config = GENERATION_CONFIGS.get(self.question_type, {"max_new_tokens": 100, "temperature": 0.7})
 
