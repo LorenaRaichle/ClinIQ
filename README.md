@@ -1,11 +1,11 @@
-# clin_IQ: A Medical Expert-Level Question-Answering System
+# ClinIQ: A Medical Expert-Level Question-Answering System
 
-![Image](https://github.com/LorenaRaichle/ClinIQ/main/visuals/Project%20Overview.png)
+![Image](https://github.com/LorenaRaichle/ClinIQ/blob/main/visuals/Project%20Overview.png)
 
 
 
-Goal and scope of this project is the training of a Q&A-system trained specifically on medical data, able to handle 4 types of questions.
-To optimize the output of our model, Data Augmentation, Preprocessing Enhancements, Parameter Choice and both Retrieval-Augmented Generation as well as fine-tuning on a combination of 16 datasets are used to reach higher performance compared to the baseline model. 
+Goal and scope of this project is the training of a Q&A-system trained specifically on medical data, able to handle four different question types.
+To optimize the output of our model, Data Augmentation, Preprocessing Enhancements, Parameter Choice and both Retrieval-Augmented Generation (RAG) as well as Fine-Tuning (FT) on a combination of 9+1 datasets are used to reach higher performance compared to the baseline model. 
 
 Link to challenge: https://brandonio-c.github.io/ClinIQLink-2025/
 
@@ -98,8 +98,7 @@ You can also run custom scripts located in the `utils/` directory.
 
 - **Random seeds:** Make sure random seeds are set and noted in your notebooks.
 - **Environment:** Include the exact versions of libraries used (already covered by `requirements.txt`).
-- **Data:** The data used for fine-tuning the model that has been processed in the "1_Preprocessing.ipynb" file can be accessed over websites such as Kaggle, Huggingface and Github. In case of any local data to this repository, this can be found under data/raw.
-Additionally we have provided a list with all datasets used, in an Excel sheet "sources_links_to_raw_data.xlsx" (data/raw) which includes the respective link to each data source.
+- **Data:** The data used for fine-tuning the model that has been processed in the preprocessing files can be accessed over websites such as Kaggle and Huggingface. 
 - **Model Checkpoints:** Provide checkpoints clearly named and explained.
 
 ---
@@ -108,36 +107,50 @@ Additionally we have provided a list with all datasets used, in an Excel sheet "
 
 | Name              | Contributions                                  |
 |-------------------|------------------------------------------------|
-| L. R.| Data preprocessing, baseline model evaluation.|
-| M. K. W.| Model training, hyperparameter tuning.|
-| A. P.| Evaluation, Data preprocessing, visualization, documentation.|
+| L. R.| Preprocessing,  RAG, Visualization, Documentation|
+| M. K. W.| Baseline model and Fine-tuning, Preprocessing, Visualization, Evaluation, Documentation |
+| A. P.| Evaluation, Preprocessing, Visualization, Documentation|
 
 
-*[Each team member should describe their contributions clearly here.]*
+
 
 ---
 
 ## Results & Evaluation
-
-- [Briefly summarize your evaluation metrics, improvements from baseline, and insights drawn from experiments.]
-- We have decided on a number of evaluation metrics, that can be found listed under metrics in the Excel sheet "Evaluation_Metrics.xlsx". We evaluate the model versions in the "4_Evaluation.ipynb" file.
+- We have decided on a number of evaluation metrics to evaluate the model approaches for both closed-end and open-ended questions.
+The Advanced RAG plus FT model consistently outperformed other models across most evaluation metrics, demonstrating strong performance across question types.
+In Multiple Choice and True/False tasks, the FT model showed the highest accuracy for True/False questions (0.655), while Advanced RAG plus FT led in most other Multiple Choice metrics.
+For Short Answer generation, Advanced RAG plus FT achieved the best scores in BLEU, METEOR, ROUGE, and similarity metrics, with notably high precision and recall.
+The base model consistently underperformed, scoring significantly lower than the other models in all evaluation categories which has shown the continuous improvement over different model approaches. Multi-Hop reasoning results mirrored the Short Answer findings, with Advanced RAG plus FT again leading in terms of performance.
 
 ---
 
 ## References
 
-[List here any relevant papers, sources, libraries, or resources used in your project.]
 
-- Doe, J. (2024). *Great NLP Paper*. Conference Name.
-- [Library Used](https://example-library.com)
+## Datasets
+
+| Dataset Name                                              | Source Description / Citation |
+|-----------------------------------------------------------|-------------------------------|
+| FreedomIntelligence/medical-o1-reasoning-SFT              | Chen et al. (2024). Huatuogpt-o1, towards medical complex reasoning with LLMs. |
+| openlifescienceai/MedMCQA                                 | Pal et al. (2022). MedMCQA: A large-scale multi-subject multi-choice dataset for medical domain QA. |
+| stellalisy/mediQ                                          | https://huggingface.co/datasets/stellalisy/mediQ |
+| bigbio/MedQA                                              | Jin et al. (2021). What disease does this patient have? A large-scale open-domain QA dataset from medical exams. |
+| UCSC-VLAA/MedReason                                       | Wu et al. (2025). MedReason: Eliciting factual medical reasoning steps in LLMs via knowledge graphs. |
+| Ajayaadhi/Medical-QA                                      | https://huggingface.co/datasets/Ajayaadhi/Medical-QA |
+| Comprehensive Medical Q&A Dataset (Kaggle)                | https://www.kaggle.com/datasets/thedevastator/comprehensive-medical-q-a-dataset |
+| HPAI-BSC/OpenMedQA                                        | Bayarri Planas, J. (n.d.). https://huggingface.co/datasets/HPAI-BSC/OpenMedQA |
+| qiaojin/PubMedQA                                          | https://huggingface.co/datasets/qiaojin/PubMedQA |
+| MedRAG/pubmed                                             | Xiong et al. (2024). Benchmarking retrieval-augmented generation for medicine. |
+
 
 ---
 ## Directory of Writing Aids
 
 | Aid                 | Usage / Application                                                                 | Affected Areas |
 |---------------------|--------------------------------------------------------------------------------------|----------------|
-| **Google's Gemini**     | Debugging and generation of code    | Preprocessing.ipynb    |
-| **Chat GPT 4.0 – OpenAI** | Brainstorming relevant metrics for evaluation| Evaluation.ipynb   |
-| **Chat GPT 4.0 – OpenAI** |Citation generation| Entire repository   | 
+| **Google's Gemini**     | Debugging and generation of code    | Preprocessing |
+| **Chat GPT 4.0 – OpenAI** |Brainstorming relevant metrics for Evaluation, Writing, Formatting| Entire repository   | 
+| **Perplexity.AI** |Writing, Formatting| Entire repository   |
 <sub>Table 1: Writing Aids (Art. 57 AB)</sub>
 
