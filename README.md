@@ -1,13 +1,17 @@
 # ClinIQ: A Medical Expert-Level Question-Answering System
+**(by Konstantin, Adria & Lorena)**
 
-![Image](https://github.com/LorenaRaichle/ClinIQ/blob/main/visuals/Project%20Overview.png)
+Goal of this project is the setup of a domain specific (medical) Q&A-system that is able to answer four possible question types: **Multiple Choice**, **True-False**, **Short Answer** and **Multi-Hop** with higher performance compared to the baseline model.
+We fine-tuned the **deepseek-coder-7b-instruct-v1.5** model and embedded it in a Retrieval-Augmented Generation (RAG) pipeline to access additional knowledge.
 
-
-
-Goal and scope of this project is the training of a Q&A-system trained specifically on medical data, able to handle four different question types.
-To optimize the output of our model, Data Augmentation, Preprocessing Enhancements, Parameter Choice and both Retrieval-Augmented Generation (RAG) as well as Fine-Tuning (FT) on a combination of 9+1 datasets are used to reach higher performance compared to the baseline model. 
 
 Link to challenge: https://brandonio-c.github.io/ClinIQLink-2025/
+
+
+![Image](visuals/Project Overview.png)
+
+
+
 
 ## Table of Contents
 

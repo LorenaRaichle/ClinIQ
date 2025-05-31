@@ -1,4 +1,4 @@
-# RAG_pipeline.py
+# RAG_naive_pipeline.py
 
 import os
 import torch
