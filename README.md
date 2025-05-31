@@ -1,6 +1,6 @@
 # clin_IQ: A Medical Expert-Level Question-Answering System
-![Image](https://github.com/Adria100/clin_IQ/blob/main/visuals/Process%20Flowchart%20Diagram.png)
-> *Diagram inspired by [GeeksforGeeks (2024)](https://media.geeksforgeeks.org/wp-content/uploads/20240506173418/RAG-vs-Fine-tuning.png).*
+![Image](visuals/Project Overview.png)
+
 
 
 Goal and scope of this project is the training of a Q&A-system trained specifically on medical data, able to handle 4 types of questions.
