@@ -2,7 +2,9 @@
 
 import os
 from peft import PeftModel
+from typing import Any
 import torch
+from langchain_core.runnables.config import RunnableConfig
 import json
 from transformers import pipeline, AutoTokenizer, AutoModelForCausalLM
 from langchain_core.prompts import PromptTemplate
@@ -62,13 +64,15 @@ class RAGAdvPipeline:
                 self.index = index
                 self.embedder = embedder
 
-            def invoke(self, query: str, config=None):
-                return self.get_relevant_documents(query)
+            def invoke(self, input: Any, config: RunnableConfig | None = None):
+                question_text = input if isinstance(input, str) else input.get("question", "")
+                return self.get_relevant_documents(question_text)
 
             def get_relevant_documents(self, query: str, k: int = 5):
                 # extracting metadata from query
-                kw, diseases, symptoms, procedures = extract_keywords_and_entities(query)
-                ages, gender = extract_age_gender(query)
+                question_text = query if isinstance(query, str) else query.get("question", "")
+                kw, diseases, symptoms, procedures = extract_keywords_and_entities(question_text)
+                ages, gender = extract_age_gender(question_text)
 
                 # print(f"\nQuery: {query!r}")
                 # print("  → keywords:  ", kw)
