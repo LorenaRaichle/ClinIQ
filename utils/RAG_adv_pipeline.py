@@ -140,11 +140,12 @@ class RAGAdvPipeline:
             # FINETUNED
             # check models/ft_multiple_choice_v2_balanced_and_shuffled-20250531T154625Z-1-001.zip
             model_path = "/content/drive/MyDrive/NLP/03_Training/ft_v21_balanced/ft_multiple_choice_v2_balanced_and_shuffled"
-            tokenizer = AutoTokenizer.from_pretrained(model_path)
+
+            tokenizer = AutoTokenizer.from_pretrained(model_path, local_files_only=True)
             model = AutoModelForCausalLM.from_pretrained(model_path,
                                                          device_map={"": 0},
-                                                         torch_dtype=torch.float16)
-
+                                                         torch_dtype=torch.float16,
+                                                         local_files_only=True)
 
             gen_config = GENERATION_CONFIGS.get(self.question_type, {"max_new_tokens": 100, "temperature": 0.7})
 
