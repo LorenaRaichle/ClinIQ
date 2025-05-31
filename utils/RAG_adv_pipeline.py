@@ -139,7 +139,9 @@ class RAGAdvPipeline:
 
             # FINETUNED
             # check models/ft_multiple_choice_v2_balanced_and_shuffled-20250531T154625Z-1-001.zip
-            model_path = "/content/drive/MyDrive/NLP/03_Training/ft_v21_balanced/ft_multiple_choice_v2_balanced_and_shuffled"
+           ##
+            model_path = "/content/drive/MyDrive/LORENA/RAG/DS/ft_multiple_choice_v2_balanced_and_shuffled"
+           # model_path = "/content/drive/MyDrive/NLP/03_Training/ft_v21_balanced/ft_multiple_choice_v2_balanced_and_shuffled"
 
             tokenizer = AutoTokenizer.from_pretrained(model_path, local_files_only=True)
             model = AutoModelForCausalLM.from_pretrained(model_path,
