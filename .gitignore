@@ -40,6 +40,9 @@ data/raw
 venv_clin/
 .env
 
+content/Topic_modeling/rag_keyphrases_250k_embedded_gpu.jsonl
+content/Topic_modeling/rag_keyphrases_250k_embedded_gpu1.jsonl
+
 models
 # Windows shortcut files
 *.lnk
