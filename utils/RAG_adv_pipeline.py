@@ -176,7 +176,16 @@ class RAGAdvPipeline:
             # Extracting ids from the retrieved contexts and retrieving context from files
             input_str = inputs['context']
             content = []
-            sources = {}
+
+            sources = set()
+            for split, split_data in self.full_data.items():
+                for entry in split_data:
+                    sources.add(entry['source'])
+
+            sources = dict.fromkeys(sources, 0)
+            sources['PubMed'] = 0
+
+
             pubmed_data_dict = {doc["id"]: doc for doc in self.pubmed_data}
 
             for string in input_str:
