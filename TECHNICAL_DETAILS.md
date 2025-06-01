@@ -1,13 +1,13 @@
 # TECHNICAL DOCUMENTATION
 
-## Data-Collection-Preprocessing
-# Technical Documentation: 1_Preprocessing.ipynb
+# Data-Collection-Preprocessing
+## Technical Documentation: 1_Preprocessing.ipynb
 
-# File Description
+## File Description
 
 This Jupyter Notebook, `1_Preprocessing.ipynb`, is responsible for the data acquisition, cleaning, transformation, and preparation of datasets for training a medical Question and Answer (Q&A) system. It integrates data from various sources, structures it into a unified format, and splits it into training and testing sets for subsequent model development.
 
-# Key Functionality
+## Key Functionality
 
 The notebook performs the following main tasks:
 
@@ -27,7 +27,7 @@ The notebook performs the following main tasks:
 10. **Data Visualization:** Includes code to generate bar plots showing the distribution of question types and statistics on the multi-hop reasoning data (number of steps and character length) in the training and testing sets.
 11. **Model Loading (Partial):** Loads a pre-trained language model (`unsloth/DeepSeek-R1-Distill-Llama-8B`) and its tokenizer using the `transformers` library, in preparation for potential fine-tuning (although the fine-tuning process itself is only partially defined in the provided code snippet).
 
-# Dependencies
+## Dependencies
 
 The notebook relies on the following key Python libraries:
 
@@ -53,7 +53,7 @@ The notebook relies on the following key Python libraries:
 *   `numpy`
 *   `zipfile`
 
-# Usage
+## Usage
 
 To execute this notebook, you need:
 
@@ -63,22 +63,22 @@ To execute this notebook, you need:
 
 Running the cells sequentially will perform the data preprocessing steps, generate the training and testing datasets, and upload them to the specified GitHub repository.
 
-## Rag-Specific-Preprocessing
+# Rag-Specific-Preprocessing
 
 k eyperiment
 idnex 1 and index 2
 source trackingretrieval
 
-## Topic-Modeling
+# Topic-Modeling
 
 
-## Pubmed-Balanced-Index2
+# Pubmed-Balanced-Index2
 
-## Retrieve-k-Experiments
+# Retrieve-k-Experiments
 
-## Baseline
+# Baseline
 
-## Fine-tuning
+# Fine-tuning
 
-## Evaluation
+# Evaluation
  --> check results folder in structure 
