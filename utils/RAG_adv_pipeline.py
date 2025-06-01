@@ -48,8 +48,6 @@ class RAGAdvPipeline:
         {context}
 
         {question}
-
-        Answer:
         """
 
         return PromptTemplate(

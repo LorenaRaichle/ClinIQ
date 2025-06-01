@@ -2,6 +2,7 @@
 
 import re
 
+import re
 
 def extract_multiple_choice_letters(predictions):
     """
@@ -13,23 +14,16 @@ def extract_multiple_choice_letters(predictions):
     Returns:
         list: Extracted single-letter answers or 'na' if not found.
     """
-    pattern = re.compile(
-        r'''
-        (?:correct\ answers?\ is|please\ state\ only\ the\ letter)
-        \s*[:]*\s*
-        (?:\r?\n\s*)*
-        ([A-E])
-        ''',
-        flags=re.IGNORECASE | re.VERBOSE
-    )
+    pattern = re.compile(r'\b([A-E])[\.\):]?', flags=re.IGNORECASE)
 
     extracted = []
     for sample in predictions:
-        gen = sample.get('generated_answer') or ""
-        m = pattern.search(gen)
-        extracted.append(m.group(1) if m else "na")
+        gen = sample.get('generated_answer', "")
+        matches = pattern.findall(gen)
+        extracted.append(matches[0].upper() if matches else "na")
 
     return extracted
+
 
 
 
