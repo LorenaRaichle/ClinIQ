@@ -239,6 +239,26 @@ You can also run custom scripts located in the `utils/` directory.
 
 ## Results & Evaluation
 --------------- TO DO: insert overview table of results-------------------
+| Model                | MC Acc. | MC Prec. | MC Rec. | T/F Acc. | T/F Prec. | T/F Rec. |
+| -------------------- | ------: | -------: | ------: | -------: | --------: | -------: |
+| Advanced RAG plus FT |   0.467 |    0.388 |   0.377 |    0.595 |     0.440 |    0.405 |
+| Advanced RAG         |   0.337 |    0.263 |   0.249 |    0.437 |     0.401 |    0.305 |
+| FT                   |   0.404 |    0.334 |   0.318 |    0.655 |     0.488 |    0.440 |
+| Base                 |   0.254 |    0.054 |   0.169 |    0.477 |     0.488 |    0.500 |
+
+| Model                |  BLEU | METEOR | ROUGE1 | ROUGE2 | ROUGEL | Prec. |  Rec. |    F1 | CosSim | ReasonCoh | SentSim | ParaSim |
+| -------------------- | ----: | -----: | -----: | -----: | -----: | ----: | ----: | ----: | -----: | --------: | ------: | ------: |
+| Advanced RAG plus FT | 0.206 |  0.402 |  0.401 |  0.314 |  0.355 | 0.843 | 0.868 | 0.854 |  0.913 |     0.794 |   0.867 |   0.913 |
+| Advanced RAG         | 0.118 |  0.295 |  0.339 |  0.210 |  0.269 | 0.848 | 0.870 | 0.858 |  0.850 |     0.727 |   0.801 |   0.850 |
+| FT                   | 0.049 |  0.207 |  0.263 |  0.109 |  0.188 | 0.834 | 0.838 | 0.835 |  0.836 |     0.654 |   0.665 |   0.836 |
+| Base                 | 0.014 |  0.061 |  0.084 |  0.033 |  0.061 | 0.781 | 0.791 | 0.785 |  0.262 |     0.191 |   0.237 |   0.262 |
+
+| Model                |  BLEU | METEOR | ROUGE1 | ROUGE2 | ROUGEL | Prec. |  Rec. |    F1 | CosSim | ReasonCoh | SentSim | ParaSim |
+| -------------------- | ----: | -----: | -----: | -----: | -----: | ----: | ----: | ----: | -----: | --------: | ------: | ------: |
+| Advanced RAG plus FT | 0.241 |  0.501 |  0.544 |  0.367 |  0.406 | 0.893 | 0.922 | 0.907 |  0.980 |     0.887 |   0.926 |   0.980 |
+| Advanced RAG         | 0.156 |  0.359 |  0.407 |  0.245 |  0.295 | 0.862 | 0.892 | 0.876 |  0.855 |     0.710 |   0.799 |   0.855 |
+| FT                   | 0.079 |  0.303 |  0.406 |  0.162 |  0.247 | 0.862 | 0.879 | 0.870 |  0.947 |     0.749 |   0.790 |   0.947 |
+| Base                 | 0.018 |  0.086 |  0.131 |  0.040 |  0.077 | 0.796 | 0.813 | 0.804 |  0.352 |     0.253 |   0.306 |   0.352 |
 
 - We have decided on a number of evaluation metrics to evaluate the model approaches for both closed-end and open-ended questions.
 The Advanced RAG plus FT model consistently outperformed other models across most evaluation metrics, demonstrating strong performance across question types.
