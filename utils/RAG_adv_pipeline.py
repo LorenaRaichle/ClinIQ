@@ -226,16 +226,9 @@ class RAGAdvPipeline:
                 | RunnableLambda(lambda x: log_and_format(x, prompt))
                 | llm
                 | StrOutputParser()
-                | RunnableLambda(lambda x: x.strip().split("Answer:")[-1].strip())
         )
 
         return chain
-        # chain = (
-        #         {"context": self.retriever, "question": RunnablePassthrough()}
-        #         | RunnableLambda(lambda x: log_and_format(x, prompt))
-        #         | llm
-        #         | StrOutputParser()
-        # )
 
 
 
