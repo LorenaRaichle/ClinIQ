@@ -48,7 +48,7 @@ class RAGAdvPipeline:
         {context}
 
         {question}
-         You are a medical expert. Provide only the answer (A, B, C, etc.).
+        You are a medical expert. Only return the correct answer letter (A, B, C, D, or E).
 
         Answer:
         """
