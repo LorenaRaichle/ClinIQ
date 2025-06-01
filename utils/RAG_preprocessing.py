@@ -1,31 +1,19 @@
+# RAG_preprocessing.py
+
 """
-RAG_preprocessing.py
 
-This file contains utility classes and functions to prepare our training and the PubMed datasets for RAG-based experiments.
-It focuses on assigning unique, type-specific IDs and checking source information and file stats in the training data.
+Provides utility classes for preparing training and PubMed datasets for RAG:
+- Assigns unique, type-specific IDs
+- Verifies source metadata for traceability
+- Loads/saves structured datasets from disk
+- Optionally plots dataset source distributions
 
-These IDs and sources enable consistent tracking across training, evaluation, and especially the retrieval process.
-In the RAG pipeline, this is crucial because the retriever typically returns only document IDs, which need to be traced back to the original data stored in Google Drive.
-
-Example:
-                {'correct_answer': 'B',
-             'id': 'mc_0',
-             'options': {'A': '1-1 ½ year after eruption',
-                         'B': '2-3 year after eruption',
-                         'C': '6 months after eruption',
-                         'D': 'None of the above',
-                         'E': None},
-             'question': 'Root completion of permanent tooth occurs',
-             'source': 'MC3-openlifescienceai/medmcqa',
-             'type': 'multiple_choice'}
-
-Key Components:
-
+Crucial for ensuring reliable document retrieval and evaluation alignment.
+Key Components
 - class DataPaths       # Centralized class for managing and loading dataset paths from the /Data directory.
 - class DataStats       # Summary/inspection of loaded data
 - class AddingIDs       # Assigns unique, type-prefixed IDs to dataset examples based on question type.
 - class CheckingSources   # Checking source metadata to each entry for easier retrieval analysis.
-
 
 """
 

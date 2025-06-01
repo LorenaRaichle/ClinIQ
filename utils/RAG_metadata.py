@@ -1,4 +1,17 @@
 # RAG_metadata.py
+
+"""
+RAG_metadata.py
+
+Utilities for extracting semantic metadata from medical texts / queries using spaCy:
+- Named entities: diseases, symptoms, procedures
+- Age/gender categorization
+- Noun phrase keyword extraction
+
+Used for metadata-based filtering in the hybrid retriever.
+"""
+
+
 from pathlib import Path
 
 import spacy

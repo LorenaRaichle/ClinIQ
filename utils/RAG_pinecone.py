@@ -1,5 +1,18 @@
 # RAG_pinecone.py
 
+"""
+RAG_pinecone.py
+
+Handles initialization and population of the Pinecone vector index.
+Includes:
+- `init_index`: sets up the vector index with configuration
+- `RAGIndexer`: class to encode training and PubMed data, extract metadata,
+  and upsert documents into Pinecone.
+
+Also integrates entity and demographic extraction to enrich metadata filtering.
+"""
+
+
 import os
 import json
 from tqdm import tqdm

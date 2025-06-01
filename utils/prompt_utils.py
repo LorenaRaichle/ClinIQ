@@ -1,4 +1,15 @@
 # utils/prompt_utils.py
+"""
+prompt_utils.py
+
+Defines prompt-building utilities for different question types.
+Includes functions for dynamically generating model prompts and inputs for:
+- Multiple Choice
+- True/False
+- Short Answer
+- Multi-Hop
+"""
+
 
 def build_prompt(prompt_style: str, question: str):
     return prompt_style.replace("{_question_var_}", question)

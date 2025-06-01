@@ -1,5 +1,14 @@
 # RAG_adv_pipeline.py
 
+"""
+RAG_adv_pipeline.py
+
+Defines the advanced RAG pipeline class used for query answering.
+Includes hybrid retrieval with metadata filtering and a LangChain-based QA chain
+that uses a fine-tuned DeepSeek model for generation.
+"""
+
+
 import os
 from peft import PeftModel
 from typing import Any

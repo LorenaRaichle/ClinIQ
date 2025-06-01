@@ -1,5 +1,16 @@
 # RAG_answer.py
 
+"""
+RAG_answer.py
+
+Contains extraction functions to parse and normalize model-generated answers.
+Supports:
+- Multiple choice (letter extraction)
+- True/False classification
+- Short answers
+- Multi-hop justifications (with blocked response detection)
+"""
+
 import re
 
 def extract_multiple_choice_letters(predictions):

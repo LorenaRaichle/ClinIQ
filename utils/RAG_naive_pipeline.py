@@ -1,5 +1,14 @@
 # RAG_naive_pipeline.py
 
+"""
+RAG_naive_pipeline.py
+
+Implements a baseline RAG pipeline without metadata filtering.
+Uses simple semantic similarity-based retrieval via Pinecone and DeepSeek generation.
+Serves as a reference pipeline for experimentation and comparison with the advanced RAG setup.
+"""
+
+
 import os
 import torch
 import json
