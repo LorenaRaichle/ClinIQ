@@ -256,7 +256,7 @@ Then open the notebooks in your browser, starting with `1a_Preprocessing_dataset
 
 ### 4. Evaluation
 - **`4_Evaluation_RAG+FT.ipynb`**  
-  Evaluates model performance after combining RAG with fine-tuning, using metrics like BLEU, ROUGE, accuracy, etc.
+  This notebook evaluates the performance of a Retrieval-Augmented Generation (RAG) pipeline combined with a finetuned DeepSeek model on various medical question types using two different Pinecone indices. It runs inference, extracts answers, and computes evaluation metrics for multiple choice, short answer, true/false, and multi-hop questions.
 
 
 ## Reproducibility
