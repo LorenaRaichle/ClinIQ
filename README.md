@@ -65,12 +65,12 @@ Our Advanced RAG pipeline performs **hybrid retrieval** from a large training da
 
 Our workflow consists of several key stages. Below is a summary of each step, along with links to the relevant notebooks for code execution. For in-depth explanations, please refer to our [Technical Documentation](TECHNICAL_DETAILS.md).
 
-## 1 Data Collection & Processing Training set  
+### 1 Data Collection & Processing Training set  
 We unified and preprocessed **9 datasets** covering all question types (MC, TF, SA, MH). More than 500k questions were gathered across 9 different datasets with different layouts,  producing a consolidated train-test set.
 [1a_Preprocessing_dataset Notebook →](1a_Preprocessing_dataset.ipynb) [Technical Documentation - data-collection-preprocessing](TECHNICAL_DETAILS.md#data-collection-preprocessing) 
 
 
-## 2 RAG Knowledge Base Population & Retrieval Setup
+### 2 RAG Knowledge Base Population & Retrieval Setup
 We designed a RAG pipeline with a hybrid retriever and populated its Pinecone vector store with two core sources:
   - **Training Dataset** (400K questions with metadata)  
   - **PubMed Abstracts** (reduced to ~15K via topic modeling)
@@ -102,7 +102,7 @@ We experimented with different `k` values in our retriever, validating through b
 
 
   
-## 3 Baseline for Comparison
+### 3 Baseline for Comparison
 
 As part of our evaluation, ...
  [2a_Baseline_7bcoder.ipynb →](2a_Baseline_7bcoder.ipynb)  
@@ -111,12 +111,12 @@ As part of our evaluation, ...
 
 
 
-## 4 Fine-Tuning  
+### 4 Fine-Tuning  
  [3a Training Notebook →](3a_Training_7b_LoRA_balanced.ipynb) [Technical Documentation - fine-tuning](TECHNICAL_DETAILS.md#fine-tuning)
 
 
 
-## 5 Evaluation
+### 5 Evaluation
  [4_Evaluation_RAG+FT Notebook →](4_Evaluation_RAG+FT.ipynb) [Technical Documentation - evaluation](TECHNICAL_DETAILS.md#evaluation) 
 
 
