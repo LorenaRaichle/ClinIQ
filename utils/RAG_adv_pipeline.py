@@ -216,9 +216,9 @@ class RAGAdvPipeline:
 
             prompt_text = prompt.format(context=context_text, question=question_text)
 
-            print("\n--- Prompt Sent to Model ---\n")
-            print(prompt_text)
-            print("\n-----------------------------\n")
+           # print("\n--- Prompt Sent to Model ---\n")
+           # print(prompt_text)
+            #print("\n-----------------------------\n")
 
             return prompt_text
 

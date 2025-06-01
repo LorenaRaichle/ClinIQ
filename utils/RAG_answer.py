@@ -5,35 +5,29 @@ import re
 
 import re
 
+import re
+
 def extract_multiple_choice_letters(predictions):
     """
-    Extracts predicted answer letter (A–E) from model-generated answers.
-    Returns 'na' if no valid option is found.
+    Extracts a predicted answer letter (A–E) from generated answers.
+    Falls back to 'na' if no valid letter is found.
     """
     extracted = []
 
     for sample in predictions:
-        answer = sample.get("generated_answer", "").strip()
+        gen = sample.get("generated_answer", "").strip()
 
-
-        match = re.match(r"^\s*([A-E])[\.\s:\n]", answer, flags=re.IGNORECASE)
-        if match:
-            extracted.append(match.group(1).upper())
+        # Ignore answers like 'True' or 'False'
+        if gen.lower().startswith("true") or gen.lower().startswith("false"):
+            extracted.append("na")
             continue
 
-
-        match = re.search(r"\b([A-E])[\.\s:]\s", answer, flags=re.IGNORECASE)
+        # Match "A", "A.", "A:", "A "
+        match = re.match(r"^\s*([A-E])[\s\.:]", gen, flags=re.IGNORECASE)
         if match:
             extracted.append(match.group(1).upper())
-            continue
-
-
-        match = re.search(r"\b([A-E])\b", answer)
-        if match:
-            extracted.append(match.group(1).upper())
-            continue
-
-        extracted.append("na")
+        else:
+            extracted.append("na")
 
     return extracted
 
