@@ -1,18 +1,15 @@
 # ClinIQ: A Medical Expert-Level Question-Answering System
-**(by Konstantin, Adria & Lorena)**
+**by Konstantin, Adria & Lorena**
+## Evaluate the ability of generative models to produce factually accurate medical information
+
 
 Goal of this project is the setup of a domain specific (medical) Q&A-system that is able to answer four possible question types: **Multiple Choice**, **True-False**, **Short Answer** and **Multi-Hop** with higher performance compared to the baseline model.
 We fine-tuned the **deepseek-coder-7b-instruct-v1.5** model and embedded it in a Retrieval-Augmented Generation (RAG) pipeline to access additional knowledge.
 
 
-Link to challenge: https://brandonio-c.github.io/ClinIQLink-2025/
+[Challenge description (University of Maryland)](https://brandonio-c.github.io/ClinIQLink-2025/)
 
-
-![Image](visuals/Project Overview.png)
-
-
-
-
+---
 ## Table of Contents
 
 1. [Project Description](#project-description)
@@ -28,32 +25,57 @@ Link to challenge: https://brandonio-c.github.io/ClinIQLink-2025/
 
 ## Project Description
 
-[Provide a clear and concise summary of your project, outlining the problem statement, objectives, and your chosen approach using NLP and LLM techniques.]
+<img src="visuals/Project Overview.png" alt="Project Overview" width="600"/>
 
+To solve the challenge, we fine-tuned DeepSeek Coder-7B within a RAG framework.  
+Our pipeline performs **hybrid retrieval** from a large training dataset and PubMed abstracts, combining semantic search and metadata filtering. The retrieved context is passed to the fine-tuned model to generate expert-level medical answers. Data sources are integrated via Pinecone and Google Drive, ensuring scalable and efficient knowledge access.
+
+5 experiment types
+k eyperiment
+idnex 1 and index 2
+source tracking retrieval
+slide
 ---
 
 ## Project Structure
 
 ```
 .
+├── content/
+│   ├── k_experiments/                  
+│   └── Topic_modeling/  
 ├── data/
-│   ├── raw/                  # Raw dataset
-│   └── processed/            # Processed dataset
-├── logs/                     # Logs of training and evaluation runs
-├── metrics/                  # Evaluation metrics and results
-├── models/                   # Model checkpoints and exports
-│   ├── checkpoints/
-│   └── MyFirstModel.onnx
+│   ├── raw/                            # Raw dataset
+│   └── processed/                      # Processed dataset for /Pubmed /testdata /trainingdata
+├── metrics/     
+│   ├── evaluation_suite.py             # Evaluation suite for all Question Types
+│   ├── final_results/                  # Evaluation suite results for all experiments
+│   │   ├── AdvRAG+FT/
+│   │   ├── BalancedAdvRAG+FT/
+│   │   ├── Baseline/
+│   │   ├── FineTuning/
+│   │   └── NaiveRAG/
+├── models/                             # Fine-tuned deepseek model
 ├── utils/
-│   └── trainingMyCrazyModel.py
+│   ├── prompt_utils.py                 # templates to generate model input
+│   ├── RAG_adv_pipeline.py             # defining Hybrid Retriever & QA-chain
+│   ├── RAG_answer.py                   # extraction of answer (letters) for all Question types
+│   ├── RAG_metadata.py                 # metadata extraction for pinecone upsert & query
+│   ├── RAG_naive_pipeline.py           # defining Naive Retriever & QA-chain
+│   ├── RAG_pinecone.py                 # pinecone index creation, inserting data, index stats
+│   └── RAG_preprocessing.py            # defining data paths, adding id & source info to all datasets
+├── visuals/
 ├── .gitignore
-├── 1_Preprocessing.ipynb
-├── 2_Baseline.ipynb
-├── 3_Training.ipynb
-├── 4_Evaluation.ipynb
+├── 1a_Preprocessing_dataset.ipynb      # Preprocessing of 9 datasets for all Question types
+├── 1b_Preprocessing_RAG.ipynb          # RAG specific preprocessing of 9 datasets for pinecone insertion
+├── 2a_Baseline_7bcoder.ipynb           # Baseline deepseek
+├── 2b_NaiveRAG_k_experiment.ipynb      # experiments to determine optimal k retrieved contexts parameter
+├── 2c_TopicModeling_PubMed.ipynb       # PubMed articles Topic Modeling & upsert to pinecone (INDEX 1)
+├── 2d_PubMed_train_balanced.ipynb      # populating balanced-index (INDEX 2) 
+├── 3_Training_7b_LoRA_balanced.ipynb   # Fine-tuning deepseek
+├── 4_Evaluation_RAG+FT.ipynb           # Eval
 ├── 5_Demo.ipynb
-├── CLEANCODE.MD
-├── HELP.MD
+├── config.py                           # defining temp / max. new token / INDEX_NAME for experiments
 ├── README.MD
 └── requirements.txt
 ```
