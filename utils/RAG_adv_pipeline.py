@@ -205,11 +205,18 @@ class RAGAdvPipeline:
             inputs['context'] = "\n".join(content)
             return prompt.format(**inputs)
 
+        # chain = (
+        #         {"context": self.retriever, "question": RunnablePassthrough()}
+        #         | RunnableLambda(lambda x: log_and_format(x, prompt))
+        #         | llm
+        #         | StrOutputParser()
+        # )
+
         chain = (
                 {"context": self.retriever, "question": RunnablePassthrough()}
                 | RunnableLambda(lambda x: log_and_format(x, prompt))
-                | llm
-                | StrOutputParser()
+                | self.model_pipeline  # Already a HuggingFacePipeline
+                | RunnableLambda(lambda x: x[0]["generated_text"])  # Extract actual generation
         )
 
         return chain

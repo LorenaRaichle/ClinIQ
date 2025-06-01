@@ -4,7 +4,7 @@
 # index before presentation (400k)
 #INDEX_NAME = "rag-trainset-index"
 
-# index including improvements after final presentation
+# index including improvements after final presentation (200k)
 INDEX_NAME = "balanced-index"
 
 DIMENSION = 1024
