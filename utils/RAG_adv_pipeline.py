@@ -46,8 +46,12 @@ class RAGAdvPipeline:
         template = """
         Context:
         {context}
-
+        
+        Question:
         {question}
+        
+        Respond with only the letter corresponding to the correct answer option.
+        
         """
 
         return PromptTemplate(
