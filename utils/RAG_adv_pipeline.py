@@ -48,6 +48,9 @@ class RAGAdvPipeline:
         {context}
 
         {question}
+         You are a medical expert. Provide only the answer (A, B, C, etc.).
+
+        Answer:
         """
 
         return PromptTemplate(
