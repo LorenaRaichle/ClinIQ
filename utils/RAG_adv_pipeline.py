@@ -46,19 +46,14 @@ class RAGAdvPipeline:
         template = """
         Context:
         {context}
-        
-        Question:
+
         {question}
-        
-        Respond with only the letter corresponding to the correct answer option.
-        
         """
 
         return PromptTemplate(
             input_variables=["context", "question"],
             template=template.strip()
         )
-
 
 
 
@@ -176,9 +171,9 @@ class RAGAdvPipeline:
 
         llm = self.model_pipeline
         prompt = self.get_prompt()
-        pubmed_data_dict = {doc["id"]: doc for doc in self.pubmed_data}
 
         def log_and_format(inputs, prompt):
+            # Extracting ids from the retrieved contexts and retrieving context from files
             input_str = inputs['context']
             content = []
             sources = {}
@@ -186,42 +181,48 @@ class RAGAdvPipeline:
 
             for string in input_str:
                 id = string.metadata['id']
+                # print("ID von context: ", id)
                 if id.startswith("mc"):
                     doc = self.full_data['multiple_choice'][int(id[3:])]
                     content.append(doc.get('question', '') + " " + doc.get('answer', ''))
                     source = doc['source']
+                    sources[source] += 1
+
                 elif id.startswith("sa"):
                     doc = self.full_data['short_answer'][int(id[3:])]
                     content.append(doc.get('question', '') + " " + doc.get('answer', ''))
                     source = doc['source']
+                    sources[source] += 1
+
                 elif id.startswith("tf"):
                     doc = self.full_data['true_false'][int(id[3:])]
                     content.append(doc.get('question', '') + " " + doc.get('answer', ''))
                     source = doc['source']
+                    sources[source] += 1
+
                 elif id.startswith("mh"):
                     doc = self.full_data['multi_hop'][int(id[3:])]
                     content.append(doc.get('question', '') + " " + doc.get('answer', ''))
                     source = doc['source']
+                    sources[source] += 1
+
                 elif id.startswith("pubmed"):
                     doc = pubmed_data_dict[id]["content"]
                     content.append(doc)
                     source = "PubMed"
-                sources[source] = sources.get(source, 0) + 1
+                    sources[source] += 1
 
-            context_text = "\n".join(content)
+            content = {
+                'role': 'system',
+                'content': "\n".join(content)
+            }
+            if not content:
+                print("Warning: No content extracted!")
+            inputs['context'] = content['content']
 
+            rendered = prompt.format(**inputs)
+            return rendered
 
-            question_text = inputs["question"]
-            if isinstance(question_text, dict):
-                question_text = question_text.get("question", "")
-
-            prompt_text = prompt.format(context=context_text, question=question_text)
-
-           # print("\n--- Prompt Sent to Model ---\n")
-           # print(prompt_text)
-            #print("\n-----------------------------\n")
-
-            return prompt_text
 
         chain = (
                 {"context": self.retriever, "question": RunnablePassthrough()}

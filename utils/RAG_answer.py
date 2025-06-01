@@ -4,9 +4,14 @@ import re
 
 import re
 
+import re
+
 def extract_multiple_choice_letters(predictions):
     """
     Extracts the predicted answer letter (A–E) from model-generated answers.
+
+    It first tries to match specific phrasing patterns like "correct answer is: B".
+    If that fails, it falls back to matching the first standalone letter A–E.
 
     Parameters:
         predictions (list): List of dicts containing 'generated_answer' fields.
@@ -14,15 +19,36 @@ def extract_multiple_choice_letters(predictions):
     Returns:
         list: Extracted single-letter answers or 'na' if not found.
     """
-    pattern = re.compile(r'\b([A-E])[\.\):]?', flags=re.IGNORECASE)
+    # Pattern 1: Phrasing like "correct answer is: B" or "please state only the letter: C"
+    phrase_pattern = re.compile(
+        r'''
+        (?:                                       # non-capturing group
+          correct\ answers?\ is                   # e.g. "correct answer is"
+          |please\ state\ only\ the\ letter       # or "please state only the letter"
+        )
+        \s*[:]*\s*                                 # allow optional space or colon
+        (?:\r?\n\s*)*                              # optional newlines or indents
+        ([A-E])                                    # capture A–E
+        ''',
+        flags=re.IGNORECASE | re.VERBOSE
+    )
+
+    # Pattern 2: General fallback — match standalone letter A–E with optional punctuation
+    fallback_pattern = re.compile(r'\b([A-E])[\.\):]?', flags=re.IGNORECASE)
 
     extracted = []
+
     for sample in predictions:
         gen = sample.get('generated_answer', "")
-        matches = pattern.findall(gen)
-        extracted.append(matches[0].upper() if matches else "na")
+        match = phrase_pattern.search(gen)
+        if match:
+            extracted.append(match.group(1).upper())
+        else:
+            fallback = fallback_pattern.findall(gen)
+            extracted.append(fallback[0].upper() if fallback else "na")
 
     return extracted
+
 
 
 
