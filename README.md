@@ -221,8 +221,6 @@ Then open the notebooks in your browser, starting with `1a_Preprocessing_dataset
 >
 > GPU is recommended for training and evaluation steps.
 
-```
-
 
 ## Running the Project
 
