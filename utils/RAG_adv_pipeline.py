@@ -178,37 +178,45 @@ class RAGAdvPipeline:
             input_str = inputs['context']
             content = []
             sources = {}
+            pubmed_data_dict = {doc["id"]: doc for doc in self.pubmed_data}
 
-            for doc in input_str:
-                id = doc.metadata['id']
+            for string in input_str:
+                id = string.metadata['id']
                 if id.startswith("mc"):
-                    item = self.full_data['multiple_choice'][int(id[3:])]
-                    content.append(item.get('question', '') + " " + item.get('answer', ''))
-                    source = item['source']
+                    doc = self.full_data['multiple_choice'][int(id[3:])]
+                    content.append(doc.get('question', '') + " " + doc.get('answer', ''))
+                    source = doc['source']
                 elif id.startswith("sa"):
-                    item = self.full_data['short_answer'][int(id[3:])]
-                    content.append(item.get('question', '') + " " + item.get('answer', ''))
-                    source = item['source']
+                    doc = self.full_data['short_answer'][int(id[3:])]
+                    content.append(doc.get('question', '') + " " + doc.get('answer', ''))
+                    source = doc['source']
                 elif id.startswith("tf"):
-                    item = self.full_data['true_false'][int(id[3:])]
-                    content.append(item.get('question', '') + " " + item.get('answer', ''))
-                    source = item['source']
+                    doc = self.full_data['true_false'][int(id[3:])]
+                    content.append(doc.get('question', '') + " " + doc.get('answer', ''))
+                    source = doc['source']
                 elif id.startswith("mh"):
-                    item = self.full_data['multi_hop'][int(id[3:])]
-                    content.append(item.get('question', '') + " " + item.get('answer', ''))
-                    source = item['source']
+                    doc = self.full_data['multi_hop'][int(id[3:])]
+                    content.append(doc.get('question', '') + " " + doc.get('answer', ''))
+                    source = doc['source']
                 elif id.startswith("pubmed"):
-                    item = pubmed_data_dict[id]["content"]
-                    content.append(item)
+                    doc = pubmed_data_dict[id]["content"]
+                    content.append(doc)
                     source = "PubMed"
                 sources[source] = sources.get(source, 0) + 1
 
             context_text = "\n".join(content)
-            inputs['context'] = context_text
-            prompt_text = prompt.format(**inputs)
-            print("\n--- Prompt Sent to Model ---")
+
+
+            question_text = inputs["question"]
+            if isinstance(question_text, dict):
+                question_text = question_text.get("question", "")
+
+            prompt_text = prompt.format(context=context_text, question=question_text)
+
+            print("\n--- Prompt Sent to Model ---\n")
             print(prompt_text)
-            print("\n-----------------------------")
+            print("\n-----------------------------\n")
+
             return prompt_text
 
         chain = (
