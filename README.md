@@ -174,30 +174,55 @@ As part of our evaluation, ...
 
 ## Setup Instructions
 
---------------- TO DO-------------------
+### 1. Clone the Repository
 
-> [!NOTE]  
-> This is only a Template. And you can add notes, Warnings and stuff with this format style. ([!NOTE], [!WARNING], [!IMPORTANT] )
-
-### Clone Repository
 ```bash
-git clone [repository-url]
-cd [repository-folder]
+git clone https://github.com/LorenaRaichle/ClinIQ.git
+cd ClinIQ
 ```
 
-### Create Environment
+### 2. Create a Python Virtual Environment
+
+For Unix/MacOS:
+```bash
+python3 -m venv venv
+source venv/bin/activate
+```
+For Windows:
 ```bash
 python -m venv venv
-source venv/bin/activate  # Unix or MacOS
-venv\Scripts\activate     # Windows
+venv\Scripts\activate
 ```
 
-### Install Dependencies
+### 3. Install Dependencies
+
 ```bash
+pip install --upgrade pip
 pip install -r requirements.txt
 ```
 
+### 4. Download Data
+
+- Obtain the referenced medical datasets from Kaggle and HuggingFace (see the “References” section above).
+
+### 5. (Optional) Set Up Jupyter Notebooks
+
+If you wish to run the project via Jupyter:
+```bash
+pip install notebook
+jupyter notebook
+```
+Then open the notebooks in your browser, starting with `1a_Preprocessing_dataset.ipynb`.
+
 ---
+
+> [!NOTE]  
+> For large-scale retrieval (Pinecone), ensure you have API keys and credentials configured if running the full pipeline. See [TECHNICAL_DETAILS.md](TECHNICAL_DETAILS.md) for details.
+>
+> GPU is recommended for training and evaluation steps.
+
+```
+
 
 ## Running the Project
 
