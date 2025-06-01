@@ -165,7 +165,9 @@ As part of our evaluation, ...
 ├── 5_Demo.ipynb
 ├── config.py                           # defining temp / max. new token / INDEX_NAME for experiments
 ├── README.MD
-└── requirements.txt
+├── requirements.txt
+└── TECHNICAL_DETAILS.MD                # further explanations on technical details and decisions
+
 ```
 
 ---
