@@ -172,33 +172,34 @@ class RAGAdvPipeline:
 
         llm = self.model_pipeline
         prompt = self.get_prompt()
+        pubmed_data_dict = {doc["id"]: doc for doc in self.pubmed_data}
 
         def log_and_format(inputs, prompt):
             input_str = inputs['context']
             content = []
             sources = {}
-            pubmed_data_dict = {doc["id"]: doc for doc in self.pubmed_data}
-            for string in input_str:
-                id = string.metadata['id']
+
+            for doc in input_str:
+                id = doc.metadata['id']
                 if id.startswith("mc"):
-                    doc = self.full_data['multiple_choice'][int(id[3:])]
-                    content.append(doc.get('question', '') + " " + doc.get('answer', ''))
-                    source = doc['source']
+                    item = self.full_data['multiple_choice'][int(id[3:])]
+                    content.append(item.get('question', '') + " " + item.get('answer', ''))
+                    source = item['source']
                 elif id.startswith("sa"):
-                    doc = self.full_data['short_answer'][int(id[3:])]
-                    content.append(doc.get('question', '') + " " + doc.get('answer', ''))
-                    source = doc['source']
+                    item = self.full_data['short_answer'][int(id[3:])]
+                    content.append(item.get('question', '') + " " + item.get('answer', ''))
+                    source = item['source']
                 elif id.startswith("tf"):
-                    doc = self.full_data['true_false'][int(id[3:])]
-                    content.append(doc.get('question', '') + " " + doc.get('answer', ''))
-                    source = doc['source']
+                    item = self.full_data['true_false'][int(id[3:])]
+                    content.append(item.get('question', '') + " " + item.get('answer', ''))
+                    source = item['source']
                 elif id.startswith("mh"):
-                    doc = self.full_data['multi_hop'][int(id[3:])]
-                    content.append(doc.get('question', '') + " " + doc.get('answer', ''))
-                    source = doc['source']
+                    item = self.full_data['multi_hop'][int(id[3:])]
+                    content.append(item.get('question', '') + " " + item.get('answer', ''))
+                    source = item['source']
                 elif id.startswith("pubmed"):
-                    doc = pubmed_data_dict[id]["content"]
-                    content.append(doc)
+                    item = pubmed_data_dict[id]["content"]
+                    content.append(item)
                     source = "PubMed"
                 sources[source] = sources.get(source, 0) + 1
 
@@ -207,6 +208,15 @@ class RAGAdvPipeline:
             prompt_text = prompt.format(**inputs)
             return prompt_text
 
+        chain = (
+                {"context": self.retriever, "question": RunnablePassthrough()}
+                | RunnableLambda(lambda x: log_and_format(x, prompt))
+                | llm
+                | StrOutputParser()
+                | RunnableLambda(lambda x: x.strip().split("Answer:")[-1].strip())
+        )
+
+        return chain
         # chain = (
         #         {"context": self.retriever, "question": RunnablePassthrough()}
         #         | RunnableLambda(lambda x: log_and_format(x, prompt))
@@ -214,16 +224,7 @@ class RAGAdvPipeline:
         #         | StrOutputParser()
         # )
 
-        chain = (
-                {"context": self.retriever, "question": RunnablePassthrough()}
-                | RunnableLambda(lambda x: log_and_format(x, prompt))
-                | llm
-                | StrOutputParser()
-                | RunnableLambda(lambda x: x.strip().split("Answer:")[-1].strip())
 
-        )
-
-        return chain
 
 
 def run_rag_pipeline(question_data, full_data, pubmed_data, pinecone_client, question_type):
