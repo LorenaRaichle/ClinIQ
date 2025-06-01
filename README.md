@@ -235,7 +235,29 @@ Follow these notebooks in order:
 
 You can also run custom scripts located in the `utils/` directory.
 
+## Description of Notebooks in the Repository
+
+### [`1b_Preprocessing_RAG.ipynb`](https://github.com/LorenaRaichle/ClinIQ/blob/main/1b_Preprocessing_RAG.ipynb)
+- **Purpose:**  
+  Prepares datasets for use in the Retrieval-Augmented Generation (RAG) pipeline.
+- **Key Contents:**  
+  - Loads and enriches training data and PubMed abstracts with unique identifiers and metadata for efficient retrieval and traceability.
+  - Handles special cases for multiple-choice questions (e.g., "All of the above", "None of the above").
+  - Saves processed datasets for vector store upsertion.
+  - Uses utility classes/functions from `utils/preprocessing_RAG.py`.
+
 ---
+
+### [`2b_NaiveRAG_k_experiment.ipynb`](https://github.com/LorenaRaichle/ClinIQ/blob/main/2b_NaiveRAG_k_experiment.ipynb)
+- **Purpose:**  
+  Experiments with the parameter `k` in the RAG pipeline, which controls how many contexts are retrieved for each query.
+- **Key Contents:**  
+  - Runs RAG inference with different `k` values.
+  - Evaluates and compares accuracy for multiple-choice questions.
+  - Assists in determining the optimal retrieval size for the final pipeline setup.
+
+---
+
 
 ## Reproducibility
 --------------- TO DO-------------------
