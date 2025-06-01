@@ -1,4 +1,6 @@
-# TECHNICAL DOCUMENTATION
+# TECHNICAL DETAILS
+
+
 
 # Data-Collection-Preprocessing
 ## Technical Documentation: 1_Preprocessing.ipynb
@@ -63,18 +65,121 @@ To execute this notebook, you need:
 
 Running the cells sequentially will perform the data preprocessing steps, generate the training and testing datasets, and upload them to the specified GitHub repository.
 
-# Rag-Specific-Preprocessing
 
-k eyperiment
-idnex 1 and index 2
-source trackingretrieval
+
+# Rag-Specific-Preprocessing
+- **Goal**: 
+  - preparing training data & pubmed data for pinecone upsert to serve as additional knowledge 
+  - ensuring the integrity, traceability, and reproducibility of data throughout the retrieval and generation pipeline 
+  
+- **How is this achieved?**
+  - Assign type-specific unique IDs (e.g., mc_0, tf_1, sa_12, pubmed_345) to each training sample. 
+  - Embed source metadata to later verify domain balance and origin. Allows to link back the retrieved context id to the full-text context stored in Google Drive.
+```json
+{
+  "id": "mc_0",
+  "question": "Root completion of permanent tooth occurs",
+  "correct_answer": "B",
+  "options": {
+    "A": "1-1 1/2 year after eruption",
+    "B": "2-3 year after eruption",
+    "C": "6 months after eruption",
+    "D": "None of the above"
+  },
+  "source": "MC3-openlifescienceai/medmcqa",
+  "type": "multiple_choice"
+}
+
+```
+-
+    - **Special Handling of Multiple Choice Answers**: answers must be fully self-contained and contextually consistent in our vector store.
+      - `"correct_answer": "B"`  must be converted into meaningful text  → "2-3 years after eruption" that can be embedded for semantic retrieval.
+      <img src="visuals/images/RAG_preprocessing/MC_char.png" alt="MC char" width="600"/>
+
+      - correct answers like **"All of the above."** / **"None of the above."** need to display the list of correct strings in the answer field 
+      <img src="visuals/images/RAG_preprocessing/MC_all_none.png" alt="none" width="800"/>
+   
+
+
+
+- **Implementation Details: → see utils/RAG_preprocessing.py** used in notebook 1b
+  - DataPaths: Manages the structured access to dataset files across all stages, including raw, processed, and experimental variants. 
+  - AddingIDs: Assigns consistent, type-prefixed unique IDs to each question (e.g., mc_23, mh_14). PubMed abstracts also get pubmed_ IDs. 
+  - CheckingSources: Aggregates and optionally visualizes source metadata per question type to monitor dataset diversity. 
+  - DataStats: Provides summary statistics and key integrity checks (missing fields, ID presence, etc.).
+
+    
+
 
 # Topic-Modeling
+(INDEX 1)
+- **Goal**: 
+  - Finding a representative PubMed subset to insert into our pinecone RAG Vector store
+  - Stay within embedding & memory limits for Pinecone
+  
+- **How is this achieved?** 
+  - By reduced the original 2.5 million PubMed abstracts to a diverse, representative 11k sample of biomedical content using topic modeling techniques.
 
+- **Implementation Details**
+  - Sample Selection: Randomly selected 250,000 abstracts from the full corpus for scalable preprocessing. 
+  - Text Cleaning & Preprocessing: Used **spaCy** for lowercasing, stopword removal, lemmatization, and filtering (see 1b_preprocessing_RAG.ipynb)
+  - Embedding Model: Generated vector representations using **Bio_ClinicalBERT** for semantic richness tailored to clinical contexts. 
+  - Dimensionality Reduction: Applied UMAP to embed documents into a lower-dimensional space. 
+  - Clustering: Used HDBSCAN to group similar abstracts, facilitating unsupervised topic discovery. 
+  - Topic Extraction: Leveraged **BERTopic** on top of this structure to extract and label topics (27 topics in total).
+    Examples: 
+    - Topic 13 → ['patient', 'ventricular', 'coronary', 'artery', 'myocardial'] 
+    - Topic 5 → ['glucose', 'insulin', 'plasma', 'diabetic', 'control']
+  - Sampling per Topic: Selected a proportional number of documents from each topic to construct a balanced ~11,000-document subset. 
+    - Intertopic Distance Map: Visual inspection confirms topic separability. 
+      
+    <img src="visuals/Interntopic Distance Map.gif" alt="Retriever Flow Demo" width="400"/>
+    <img src="visuals/TopicScores.png" alt="Retriever Flow Demo" width="600"/>
 
+    
 # Pubmed-Balanced-Index2
+(INDEX 2)
+
+- **Goal**:
+  - mitigate training data dominance in the vector store (in Index 1, we observed that 400K training questions outnumbered 11K PubMed abstracts)
+  - this was evident in retrieval bubble plots, where most documents retrieved came from the same domain as the test question.
+  
+   <img src="visuals/Index1_bubble.png" alt="Index 1 Bubble" width="600"/>
+
+- **How is this achieved?**
+  - Populating a new index 2 
+  - Strategy for Balance: 100K training questions (25K per question type: MC, TF, SA, MH) / 100K PubMed abstracts from the full 2.5M collection
+  - benefit: Improved question-type diversity in retrieved contexts
+
+- **Implementation Details** see `2d_PubMed_train_balanced.ipynb`
+
+- **Result** 
+  - shows better spread and fairness in document sourcing (increased PubMed representation) but still tends to retrieve documents from the same question type (performance similar to Index 1 across all question types)
+
+<img src="visuals/Index2_bubble.png" alt="Index 1 Bubble" width="600"/>
+
+  
+
 
 # Retrieve-k-Experiments
+
+- **Goal**:
+  - finding the optimal number of retrieved contexts (k) to feed into DeepSeek
+
+- **How is this achieved?**
+  - systematic experiments on multiple choice questions based on literature research
+  - Tested: ` k = 1, 3, 5, 8, 12`, checking accuracy on 300 samples
+
+- **Implementation Details** see `2b_NaiveRAG_k_experiment.ipynb` 
+
+- **Findings**:
+  - k = 5 yielded best performance (~59.3%) 
+  - check results in /content/k_experiments for all confusion matrices
+
+<img src="content/k_experiments/accuracy_vs_k_bar.png" alt="k param" width="600"/>
+
+
+
 
 # Baseline
 
