@@ -3,33 +3,40 @@
 import re
 
 
+import re
+
 def extract_multiple_choice_letters(predictions):
     """
-    Extracts the predicted answer letter (A–E) from model-generated answers.
-
-    Parameters:
-        predictions (list): List of dicts containing 'generated_answer' fields.
-
-    Returns:
-        list: Extracted single-letter answers or 'na' if not found.
+    Extracts predicted answer letter (A–E) from model-generated answers.
+    Returns 'na' if no valid option is found.
     """
-    pattern = re.compile(
-        r'''
-        (?:correct\ answers?\ is|please\ state\ only\ the\ letter)
-        \s*[:]*\s*
-        (?:\r?\n\s*)*
-        ([A-E])
-        ''',
-        flags=re.IGNORECASE | re.VERBOSE
-    )
-
     extracted = []
+
     for sample in predictions:
-        gen = sample.get('generated_answer') or ""
-        m = pattern.search(gen)
-        extracted.append(m.group(1) if m else "na")
+        answer = sample.get("generated_answer", "").strip()
+
+
+        match = re.match(r"^\s*([A-E])[\.\s:\n]", answer, flags=re.IGNORECASE)
+        if match:
+            extracted.append(match.group(1).upper())
+            continue
+
+
+        match = re.search(r"\b([A-E])[\.\s:]\s", answer, flags=re.IGNORECASE)
+        if match:
+            extracted.append(match.group(1).upper())
+            continue
+
+
+        match = re.search(r"\b([A-E])\b", answer)
+        if match:
+            extracted.append(match.group(1).upper())
+            continue
+
+        extracted.append("na")
 
     return extracted
+
 
 
 
