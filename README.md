@@ -222,50 +222,50 @@ Then open the notebooks in your browser, starting with `1a_Preprocessing_dataset
 > GPU is recommended for training and evaluation steps.
 
 
-## Running the Project
+## Running the Project - Notebook Overview
 
---------------- TO DO-------------------
+### 1. Preprocessing
+- **`1a_Preprocessing_dataset.ipynb`**  
+  Initial dataset preprocessing: loading, cleaning, and formatting of the data.
 
-Follow these notebooks in order:
-1. `1_Preprocessing.ipynb` - Data preprocessing
-2. `2_Baseline.ipynb` - Establishing a baseline model
-3. `3_Training.ipynb` - Model training
-4. `4_Evaluation.ipynb` - Evaluating model performance
-5. `5_Demo.ipynb` - Demonstration of the final model
-
-You can also run custom scripts located in the `utils/` directory.
-
-## Description of Notebooks in the Repository
-
-### [`1b_Preprocessing_RAG.ipynb`](https://github.com/LorenaRaichle/ClinIQ/blob/main/1b_Preprocessing_RAG.ipynb)
-- **Purpose:**  
-  Prepares datasets for use in the Retrieval-Augmented Generation (RAG) pipeline.
-- **Key Contents:**  
-  - Loads and enriches training data and PubMed abstracts with unique identifiers and metadata for efficient retrieval and traceability.
-  - Handles special cases for multiple-choice questions (e.g., "All of the above", "None of the above").
-  - Saves processed datasets for vector store upsertion.
-  - Uses utility classes/functions from `utils/preprocessing_RAG.py`.
+- **`1b_Preprocessing_RAG.ipynb`**  
+  Prepares inputs specific to Retrieval-Augmented Generation (RAG).
 
 ---
 
-### [`2b_NaiveRAG_k_experiment.ipynb`](https://github.com/LorenaRaichle/ClinIQ/blob/main/2b_NaiveRAG_k_experiment.ipynb)
-- **Purpose:**  
-  Experiments with the parameter `k` in the RAG pipeline, which controls how many contexts are retrieved for each query.
-- **Key Contents:**  
-  - Runs RAG inference with different `k` values.
-  - Evaluates and compares accuracy for multiple-choice questions.
-  - Assists in determining the optimal retrieval size for the final pipeline setup.
+### 2. Baselines & Experiments
+- **`2a_Baseline_7bcoder.ipynb`**  
+  Runs a baseline using a 7B model (`7bcoder`) to establish initial performance benchmarks.
+
+- **`2b_NaiveRAG_k_experiment.ipynb`**  
+  Tests a naïve RAG configuration
+
+- **`2c_TopicModeling_PubMed.ipynb`**  
+  Applies topic modeling on the PubMed dataset to explore latent topics and document clusters.
+
+- **`2d_PubMed_train_balanced.ipynb`**  
+  Prepares a balanced training subset from the PubMed dataset.
 
 ---
+
+### 3. Training
+- **`3a_Training_7b_LoRA_balanced.ipynb`**  
+  Fine-tunes a 7B model using Low-Rank Adaptation (LoRA) on a balanced training set.
+
+---
+
+### 4. Evaluation
+- **`4_Evaluation_RAG+FT.ipynb`**  
+  Evaluates model performance after combining RAG with fine-tuning, using metrics like BLEU, ROUGE, accuracy, etc.
 
 
 ## Reproducibility
 --------------- TO DO-------------------
 
-- **Random seeds:** Make sure random seeds are set and noted in your notebooks.
-- **Environment:** Include the exact versions of libraries used (already covered by `requirements.txt`).
-- **Data:** The data used for fine-tuning the model that has been processed in the preprocessing files can be accessed over websites such as Kaggle and Huggingface. 
-- **Model Checkpoints:** Provide checkpoints clearly named and explained.
+- **Random seeds:** Random seeds are set and noted in your notebooks.
+- **Environment:** Exact versions of libraries used are already covered by `requirements.txt`.
+- **Data:** The data used for fine-tuning the model and setting up the RAG pipeline has been processed in the preprocessing files 1a_ and 1b_ can be accessed over websites such as Kaggle and Huggingface as referenced in the Datasets section below References. 
+- **Model Checkpoints:** Checkpoints clearly named and explained.
 
 ---
 
@@ -340,5 +340,6 @@ The base model consistently underperformed, scoring significantly lower than the
 | **Google's Gemini**     | Debugging and generation of code    | Preprocessing |
 | **Chat GPT 4.0 – OpenAI** |Brainstorming relevant metrics for Evaluation, Writing, Formatting| Entire repository   | 
 | **Perplexity.AI** |Writing, Formatting| Entire repository   |
+---
 <sub>Table 1: Writing Aids (Art. 57 AB)</sub>
 
