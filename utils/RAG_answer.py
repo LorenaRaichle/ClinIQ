@@ -2,10 +2,6 @@
 
 import re
 
-import re
-
-import re
-
 def extract_multiple_choice_letters(predictions):
     """
     Extracts the predicted answer letter (A–E) from model-generated answers.
@@ -19,35 +15,29 @@ def extract_multiple_choice_letters(predictions):
     Returns:
         list: Extracted single-letter answers or 'na' if not found.
     """
-    # Pattern 1: Phrasing like "correct answer is: B" or "please state only the letter: C"
-    phrase_pattern = re.compile(
+    predicted_answer_multiple_choice = []
+
+    pattern = re.compile(
         r'''
-        (?:                                       # non-capturing group
-          correct\ answers?\ is                   # e.g. "correct answer is"
-          |please\ state\ only\ the\ letter       # or "please state only the letter"
+        (?:                                       # non-capturing group for the two prompts
+          correct\ answers?\ is                   # “correct answer is” or “correct answers is”
+          |please\ state\ only\ the\ letter        # or “Please state only the letter”
         )
-        \s*[:]*\s*                                 # allow optional space or colon
-        (?:\r?\n\s*)*                              # optional newlines or indents
-        ([A-E])                                    # capture A–E
+        \s*[:]*\s*                                # any spaces or colons after the prompt
+        (?:\r?\n\s*)*                             # skip any number of blank/indented lines
+        ([A-E])                                   # capture exactly one letter A–E
         ''',
         flags=re.IGNORECASE | re.VERBOSE
     )
 
-    # Pattern 2: General fallback — match standalone letter A–E with optional punctuation
-    fallback_pattern = re.compile(r'\b([A-E])[\.\):]?', flags=re.IGNORECASE)
-
-    extracted = []
-
     for sample in predictions:
-        gen = sample.get('generated_answer', "")
-        match = phrase_pattern.search(gen)
-        if match:
-            extracted.append(match.group(1).upper())
+        gen = sample[0].get('generated_answer') or ""
+        m = pattern.search(gen)
+        if m:
+            predicted_answer_multiple_choice.append(m.group(1))
         else:
-            fallback = fallback_pattern.findall(gen)
-            extracted.append(fallback[0].upper() if fallback else "na")
-
-    return extracted
+            predicted_answer_multiple_choice.append("na")
+    return predicted_answer_multiple_choice
 
 
 
@@ -101,18 +91,50 @@ def extract_true_false_answers(predictions):
     Returns:
         list: Extracted answers ("True", "False", or "na" if not found).
     """
+    predicted_answer_true_false = []
+    for sample in predictions:
+        match = re.search(r'Please state only False or True:\s*\n*(True|False)\.*',
+                          sample[0].get('generated_answer'), re.IGNORECASE)
+        if match:
+            answer = match.group(1)
+            predicted_answer_true_false.append({"predicted_answer": answer})
+        else:
+            predicted_answer_true_false.append({"predicted_answer": "na"})
+    return predicted_answer_true_false
+
+
+
+def extract_multi_hop_answers(predictions):
+    """
+    Extracts multi-hop answers from generated responses and detects blocked outputs.
+
+    Parameters:
+        predictions (list): List of dicts containing 'generated_answer' fields.
+
+    Returns:
+        Tuple:
+            - List of dicts with extracted 'predicted_answer'
+            - Integer count of blocked responses
+    """
+    predicted_answers = []
+    blocked_count = 0
+
     pattern = re.compile(
-        r'Please state only False or True:\s*\n*(True|False)\.*',
-        flags=re.IGNORECASE
+        r'### You are a medical expert and equipped to answer this specific question. Please answer the question and elaborate what steps you took:\s*(.+)',
+        flags=re.DOTALL
     )
 
-    extracted = []
     for sample in predictions:
-        gen = sample.get('generated_answer') or ""
-        m = pattern.search(gen)
-        answer = m.group(1) if m else "na"
-        extracted.append(answer)
+        gen = sample.get('generated_answer', "")
+        match = pattern.search(gen)
+        if match:
+            answer = match.group(1).strip()
+            if answer.lower().startswith("i'm sorry, but"):
+                answer = "N/A"
+                blocked_count += 1
+            predicted_answers.append({"predicted_answer": answer})
+        else:
+            predicted_answers.append({"predicted_answer": "na"})
 
-    return extracted
-
+    return predicted_answers, blocked_count
 

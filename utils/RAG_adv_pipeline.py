@@ -48,9 +48,7 @@ class RAGAdvPipeline:
         {context}
 
         {question}
-        Please answer with the correct letter (A, B, C, D, or E).
-
-        Answer:
+        
         """
 
         return PromptTemplate(

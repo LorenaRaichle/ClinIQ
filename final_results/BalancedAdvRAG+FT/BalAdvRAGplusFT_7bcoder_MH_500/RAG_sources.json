@@ -1,0 +1,12 @@
+{
+    "SA3-thedevastator/comprehensive-medical-q-a-dataset": 10,
+    "SA1-HPAI-BSC/OpenMedQA": 35,
+    "MH-FreedomIntelligence/medical-o1-reasoning-SFT": 1861,
+    "MC3-openlifescienceai/medmcqa": 239,
+    "SA2-Ajayaadhi/Medical-QA": 76,
+    "MC4-UCSC-VLAA/MedReason": 81,
+    "MC2-stellalisy/mediQ": 21,
+    "TF2-qiaojin/PubMedQA": 20,
+    "MC1-bigbio/med_qa": 141,
+    "PubMed": 16
+}
