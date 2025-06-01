@@ -206,6 +206,9 @@ class RAGAdvPipeline:
             context_text = "\n".join(content)
             inputs['context'] = context_text
             prompt_text = prompt.format(**inputs)
+            print("\n--- Prompt Sent to Model ---")
+            print(prompt_text)
+            print("\n-----------------------------")
             return prompt_text
 
         chain = (
