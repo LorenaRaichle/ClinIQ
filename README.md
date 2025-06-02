@@ -261,12 +261,11 @@ Then open the notebooks in your browser, starting with `1a_Preprocessing_dataset
 
 
 ## Reproducibility
---------------- TO DO-------------------
 
-- **Random seeds:** Random seeds are set and noted in your notebooks.
-- **Environment:** Exact versions of libraries used are already covered by `requirements.txt`.
-- **Data:** The data used for fine-tuning the model and setting up the RAG pipeline has been processed in the preprocessing files 1a_ and 1b_ can be accessed over websites such as Kaggle and Huggingface as referenced in the Datasets section below References. 
-- **Model Checkpoints:** Checkpoints clearly named and explained.
+- **Random seeds:** Random seeds are set and noted in the notebooks (e.g. 42 for shuffling).
+- **Environment:** Exact versions of libraries used covered by `requirements.txt`.
+- **Data:** The data used for fine-tuning the model and setting up the RAG pipeline has been processed in the preprocessing files 1a_ and 1b_ can be accessed over Huggingface . 
+- **Model:** Fine-tuned model is uploaded to Huggingface, the baseline model is the deepseek/coder-7b-instruct-v1.5.
 
 ---
 
