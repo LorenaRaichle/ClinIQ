@@ -172,6 +172,8 @@ We leveraged the guidelines for DeepSeek models, such as using clear and specifi
 We experimented with different prompts and found that the ones listed in prompt_utils.py and used in this file worked best to achieve the desired output formats.
 
 For the pipeline parameters, we used the setup below for the different question types. Since both True/False and MC questions only need to produce very short answers, we set the `max_new_tokens` to a lower number than in the SA and MH questions. Similarly, we set the `temperature` to 0.1 for True/False and MC because we did not want any creativity in the answer, but rather the most probable prediction. For SA and MH, we set the temperature to 0.7, as this was recommended in the literature.
+
+
 <img src="content\fine-tuning\pipe_params.png" alt="pipe params" width="600"/>
 
 
@@ -185,6 +187,8 @@ We set the fine-tuning up for 3 epochs, but stopped the process after 8 hours du
 We monitored training and evaluation loss using Weights & Biases.
 
 The concrete LoRA configuration is shown below.
+
+
 <img src="content\fine-tuning\lora_ft_params.png" alt="k param" width="600"/>
 
 
