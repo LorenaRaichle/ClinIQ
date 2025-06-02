@@ -162,11 +162,7 @@ The notebook performs the following main tasks:
 
 
 # Baseline
-We used the /deepseek-coder-7b-instruct-v1.5 model, which is focused on programming and code.
-- It was trained on 2T tokens with a window size of 4K.
-- Additionally, it was fine-tuned on 2B tokens of instruction data.
-
-This allowed the model to answer the questions in the correct format.
+We used the /deepseek-coder-7b-instruct-v1.5 model, which is focused on programming and code. The model was pre-trained on 2T tokens with a window size of 4K and fine-tuned on 2B tokens of instruction data. This allowed the model to answer the questions in the correct format.
 
 We leveraged the guidelines for DeepSeek models, such as using clear and specific prompts, avoiding system prompts, and avoiding few-shot prompting.
 We experimented with different prompts and found that the ones listed in prompt_utils.py and used in this file worked best to achieve the desired output formats.
