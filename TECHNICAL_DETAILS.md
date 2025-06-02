@@ -108,10 +108,8 @@ Running the cells sequentially will perform the data preprocessing steps, genera
   - CheckingSources: Aggregates and optionally visualizes source metadata per question type to monitor dataset diversity. 
   - DataStats: Provides summary statistics and key integrity checks (missing fields, ID presence, etc.).
 
-    
 
-
-# Topic-Modeling
+# topic-modeling-index1
 (INDEX 1)
 - **Goal**: 
   - Finding a representative PubMed subset to insert into our pinecone RAG Vector store
