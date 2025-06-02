@@ -3,67 +3,51 @@
 
 
 # Data-Collection-Preprocessing
-## Technical Documentation: 1_Preprocessing.ipynb
 
 ## File Description
 
-This Jupyter Notebook, `1_Preprocessing.ipynb`, is responsible for the data acquisition, cleaning, transformation, and preparation of datasets for training a medical Question and Answer (Q&A) system. It integrates data from various sources, structures it into a unified format, and splits it into training and testing sets for subsequent model development.
+The Notebook, `1a_Preprocessing.ipynb`, is responsible for the data acquisition, cleaning, transformation, and preparation of diverse medical question-answering datasets. It integrates data from various public sources like Hugging Face and Kaggle, standardizes their format, and structures them for training and evaluating our medical Q&A system. The notebook concludes with splitting the data into training and testing sets and saving them for subsequent use. The PubMed data for the RAG pipeline was processed in `1b_Preprocessing_RAG.ipynb` separately.
 
 ## Key Functionality
 
 The notebook performs the following main tasks:
 
-1.  **Import Libraries:** Imports necessary libraries for data handling, API interaction, regular expressions, machine learning utilities, and visualization.
+1.  **Initial Setup and Imports:**
+    *   Installs necessary libraries such as `datasets`, `kaggle`, and `pandas`.
+    *   Imports modules required for data loading (`datasets`), JSON handling (`json`), web requests (`requests`), time delays (`time`), regular expressions (`re`), data manipulation (`pandas`), and Kaggle API interaction.
+
 2.  **Data Acquisition:**
-    *   Loads datasets from the Hugging Face Hub using the `datasets` library.
-    *   Downloads datasets from Kaggle using the Kaggle API. Authentication is handled through environment variables for username and API key.
+    *   Loads medical Q&A datasets from the Hugging Face Hub. Retry logic is implemented for robust dataset loading.
+    *   Downloads datasets from Kaggle using the Kaggle API (`thedevastator/comprehensive-medical-q-a-dataset`, `pythonafroz/medquad-medical-question-answer-for-ai-research`). Authentication is managed by setting environment variables for the Kaggle username and API key.
+
 3.  **Data Transformation:**
-    *   Defines functions to transform data from each source into a standardized JSON-like structure. This involves extracting questions, answers, options, and source information, and assigning a question `type` (e.g., `multiple_choice`, `true_false`, `short_answer`, `multi_hop`).
-    *   Handles variations in source data structures and formats, including parsing options and extracting reasoning steps.
-4.  **Dataset Consolidation:** Combines the transformed data from all sources into a single dictionary, categorized by question type.
-5.  **Data Cleaning:** Removes entries with missing critical information (e.g., `correct_answer` for multiple-choice questions).
-6.  **Dataset Splitting:** Divides the consolidated dataset into training and testing sets using `sklearn.model_selection.train_test_split`. A stratified split is employed based on the question `type` to ensure each question type is represented proportionally in both sets.
-7.  **Formatting for Model Training:** Transforms the split datasets into a format suitable for language model training, creating "input" and "output" pairs tailored to each question type.
-8.  **Saving Processed Data:** Saves the formatted training and testing datasets as zipped JSON files (`train_dataset.zip` and `test_dataset.zip`). Each zip file contains separate JSON files for each question type (`short_answer_data.json`, `true_false_data.json`, etc.).
-9.  **Uploading to GitHub:** Uses the `github3.py` library to upload the generated zip files to a specified GitHub repository. GitHub authentication is handled using a token stored in Colab Secrets.
-10. **Data Visualization:** Includes code to generate bar plots showing the distribution of question types and statistics on the multi-hop reasoning data (number of steps and character length) in the training and testing sets.
-11. **Model Loading (Partial):** Loads a pre-trained language model (`unsloth/DeepSeek-R1-Distill-Llama-8B`) and its tokenizer using the `transformers` library, in preparation for potential fine-tuning (although the fine-tuning process itself is only partially defined in the provided code snippet).
+    *   Specific functions for each source to standardize the data format.
+    *   We transformed the data into a unified structure containing entries such as:
+        *   `question`: The text of the question.
+        *   `answer`: The answer for short answer and true/false questions.
+        *   `correct_answer`: The correct option for multiple-choice questions (e.g., "A", "B").
+        *   `options`: A dictionary of options for multiple-choice questions (e.g., `{"A": "Option A text", ...}`).
+        *   `reasoning`: A list of steps for multi-hop questions.
+        *   `source`: An identifier for the original dataset source.
+        *   `type`: The category of the question (e.g., `"multiple_choice"`, `"true_false"`, `"short_answer"`, `"multi_hop"`).
+    *   Including logic for parsing various data formats, extracting context, and formatting reasoning steps.
 
-## Dependencies
+4.  **Dataset Consolidation:**
+    *   Combines the transformed data from all sources into a single Python dictionary (`full_dataset`), where keys represent the question types and values are lists of corresponding data entries.
+    *   Randomly shuffles the data within each category.
 
-The notebook relies on the following key Python libraries:
+5.  **Data Cleaning:**
+    *   Removes multiple-choice entries where the `correct_answer` is `None`.
 
-*   `IPython`
-*   `datasets`
-*   `json`
-*   `requests`
-*   `re`
-*   `pandas`
-*   `kaggle`
-*   `os`
-*   `google.colab`
-*   `sklearn`
-*   `random`
-*   `torch`
-*   `transformers`
-*   `github3`
-*   `joblib`
-*   `tqdm`
-*   `nltk`
-*   `seaborn`
-*   `matplotlib`
-*   `numpy`
-*   `zipfile`
+6.  **Dataset Splitting:**
+    *   Divides the `full_dataset` into `train_dataset` and `test_dataset` dictionaries, maintaining the same structure.
+    *   Splits each question type category individually into an 80% training set and a 20% testing set.
 
-## Usage
+7.  **Saving Processed Data:**
+    *   Saves the `full_dataset`, `train_dataset`, and `test_dataset` dictionaries as JSON files (`full_dataset.json`, `train_dataset.json`, `test_dataset.json`) in a specified directory (`FINAL_DATASETS`).
 
-To execute this notebook, you need:
-
-*   A Google Colab environment.
-*   A Kaggle account and API credentials configured in the Colab environment variables (`KAGGLE_USERNAME` and `KAGGLE_KEY`).
-*   A GitHub token stored in Colab Secrets with the key `git` for uploading the processed datasets to a GitHub repository.
-
-Running the cells sequentially will perform the data preprocessing steps, generate the training and testing datasets, and upload them to the specified GitHub repository.
+8.  **Outdated Code Section:**
+    *   Includes a section marked as "Outdated" containing code for alternative data splitting/saving methods and processing reasoning datasets that were not ultimately used in the final approach for multi-hop questions as well as some Data Visualization and Analysis that we did during our process of understanding the data better.
 
 
 
