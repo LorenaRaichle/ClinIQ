@@ -104,7 +104,7 @@ We experimented with different `k` values in our retriever, validating through b
   
 ### 3 Baseline for Comparison
 
-As part of our evaluation, ...
+As part of our evaluation, we used an "off-the-shelf" open-weight model. We used the DeepSeek model coder-7b-instruct-v1.5. This model is an instruction-based model that was trained mainly on code to aid programmers. We used best-practice parameters (e.g. for temperature and token length) and DeepSeek's guidelines for prompting (e.g. simple, concise prompts).
  [2a_Baseline_7bcoder.ipynb →](2a_Baseline_7bcoder.ipynb)  
 [Technical Documentation - baseline ](TECHNICAL_DETAILS.md#baseline)
 
@@ -112,11 +112,13 @@ As part of our evaluation, ...
 
 
 ### 4 Fine-Tuning  
+We fine-tuned the same model that was used in the baseline evaluation using LoRA (Low-Rank Adaptation). The training data was a mix of the different question types. Each question-answer-pair was used as a whole for training (no masking on the question to just train on the answer). This notebook also includes the evaluation of the fine-tuned model using the same parameters and prompts as the baseline evaluation.
  [3a Training Notebook →](3a_Training_7b_LoRA_balanced.ipynb) [Technical Documentation - fine-tuning](TECHNICAL_DETAILS.md#fine-tuning)
 
 
 
 ### 5 Evaluation
+Evaluates the RAG+FT approach using the evaluation suite but also processes the indices that were retrieved for augmentation. The retrieved indices (sources) serve as the data basis for the bubble charts.
  [4_Evaluation_RAG+FT Notebook →](4_Evaluation_RAG+FT.ipynb) [Technical Documentation - evaluation](TECHNICAL_DETAILS.md#evaluation) 
 
 
@@ -162,7 +164,6 @@ As part of our evaluation, ...
 ├── 2d_PubMed_train_balanced.ipynb      # populating balanced-index (INDEX 2) 
 ├── 3_Training_7b_LoRA_balanced.ipynb   # Fine-tuning deepseek
 ├── 4_Evaluation_RAG+FT.ipynb           # Eval
-├── 5_Demo.ipynb
 ├── config.py                           # defining temp / max. new token / INDEX_NAME for experiments
 ├── README.MD
 ├── requirements.txt
