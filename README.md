@@ -238,13 +238,13 @@ Then open the notebooks in your browser, starting with `1a_Preprocessing_dataset
   Runs a baseline using a 7B model (`7bcoder`) to establish initial performance benchmarks.
 
 - **`2b_NaiveRAG_k_experiment.ipynb`**  
-  Tests a naïve RAG configuration
+  Tests naïve RAG configuration with different k parameters
 
 - **`2c_TopicModeling_PubMed.ipynb`**  
   Applies topic modeling on the PubMed dataset to explore latent topics and document clusters.
 
 - **`2d_PubMed_train_balanced.ipynb`**  
-  Prepares a balanced training subset from the PubMed dataset.
+  Prepares a second index (balanced training data & Pubmed data)
 
 ---
 
