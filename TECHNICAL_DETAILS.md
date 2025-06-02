@@ -150,7 +150,7 @@ The notebook performs the following main tasks:
 
 - **How is this achieved?**
   - systematic experiments on multiple choice questions based on literature research
-  - Tested: ` k = 1, 3, 5, 8, 12`, checking accuracy on 300 samples
+  - Tested: `k = 1, 3, 5, 8, 12`, checking accuracy on 300 samples
 
 - **Implementation Details** see `2b_NaiveRAG_k_experiment.ipynb` 
 
@@ -162,9 +162,30 @@ The notebook performs the following main tasks:
 
 
 # Baseline
+We used the /deepseek-coder-7b-instruct-v1.5 model, which is focused on programming and code.
+- It was trained on 2T tokens with a window size of 4K.
+- Additionally, it was fine-tuned on 2B tokens of instruction data.
+
+This allowed the model to answer the questions in the correct format.
+
+We leveraged the guidelines for DeepSeek models, such as using clear and specific prompts, avoiding system prompts, and avoiding few-shot prompting.
+We experimented with different prompts and found that the ones listed in prompt_utils.py and used in this file worked best to achieve the desired output formats.
+
+For the pipeline parameters, we used the setup below for the different question types. Since both True/False and MC questions only need to produce very short answers, we set the `max_new_tokens` to a lower number than in the SA and MH questions. Similarly, we set the `temperature` to 0.1 for True/False and MC because we did not want any creativity in the answer, but rather the most probable prediction. For SA and MH, we set the temperature to 0.7, as this was recommended in the literature.
+<img src="content\fine-tuning\pipe_params.png" alt="pipe params" width="600"/>
 
 
 # Fine-tuning
+We fine-tuned the /deepseek-coder-7b-instruct-v1.5 model using a fully supervised approach, where the model learns to generate the correct answer directly from the provided prompt.
+
+To achieve this, we concatenated the question prompt with the correct answer option into a single string (`prompt_n_answer`) and trained the model on this combined sequence. Every token in the input was used as a label, enabling the model to learn from the entire prompt–answer structure without any masking. The rationale behind this approach was to expose the model to more medical context, helping it better understand and internalize domain-specific patterns through full-sequence supervision.
+
+We set the fine-tuning up for 3 epochs, but stopped the process after 8 hours due to compute unit constraints in colab. We employed a small batch size (1 per device) to avoid RAM overflow but a gradient accumulation steps of 8, effectively simulating a larger batch size. We used a learning rate of 2e-4 and enabled mixed-precision (fp16) training to reduce memory usage (similar as above, to avoid RAM overflow) and speed up training.
+
+We monitored training and evaluation loss using Weights & Biases.
+
+The concrete LoRA configuration is shown below.
+<img src="content\fine-tuning\lora_ft_params.png" alt="k param" width="600"/>
 
 
 # Evaluation
