@@ -179,11 +179,33 @@ Running the cells sequentially will perform the data preprocessing steps, genera
 <img src="content/k_experiments/accuracy_vs_k_bar.png" alt="k param" width="600"/>
 
 
-
-
 # Baseline
+
 
 # Fine-tuning
 
+
 # Evaluation
- --> check results folder in structure 
+- **Goal**:
+  - To systematically evaluate the performance of the full Adv RAG + Finetuned DeepSeek pipeline across all question types 
+  - Compare different Pinecone index configurations (imbalanced **Index 1** vs. balanced **Index 2**) to measure accuracy and answer quality.
+
+- **How is this achieved?**
+  - Inference Pipeline: Retrieves top-k relevant contexts using Pinecone and passes them to the finetuned DeepSeek model.
+  - Answer Extraction: Applies tailored logic per question type (MC, TF, SA, MH) to extract answers from the model's output.
+  - Version 1: Uses rag-trainset-index (400K training + 11K PubMed abstracts, imbalanced)
+  → All True-False questions included, may skew retrieval due to overrepresentation of training data.
+  - Version 2: Uses balanced-index (100K training + 100K PubMed, balanced)
+  → Better question-type balance, with True-False subset filtered to only include “True” answers.
+  - Evaluation Metrics:
+    - Multiple Choice / True-False: accuracy comparison to ground truth.
+    - Short Answer / Matching: qualitative evaluation using metrics like ROUGE and BERTScore.
+
+- **Implementation Details** see `/utils/RAG_adv_pipeline.py`, `/utils/RAG_answer.py`, `/utils/RAG_pinecone.py` used in `4_Evaluation_RAG+FT.ipynb`
+
+- **Results** see `metrics/final_results/...` for scores, confusion matrices and sources for all 5 architectures and question types
+  - `AdvRAG+FT/` (Adv RAG index 1)
+  - `BalancedAdvRAG+FT/` (Adv RAG index 2)    
+  - `Baseline/` (baseline deepseek)
+  - `FineTuning/` (fine tuned deepseek)
+  - `NaiveRAG/` (Naive RAG with baseline deepseek)
