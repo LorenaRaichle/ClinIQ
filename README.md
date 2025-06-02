@@ -320,16 +320,16 @@ The base model consistently underperformed, scoring significantly lower than the
 
 | Dataset Name                                              | Source Description / Citation |
 |-----------------------------------------------------------|-------------------------------|
-| FreedomIntelligence/medical-o1-reasoning-SFT              | Chen et al. (2024). Huatuogpt-o1, towards medical complex reasoning with LLMs. |
-| openlifescienceai/MedMCQA                                 | Pal et al. (2022). MedMCQA: A large-scale multi-subject multi-choice dataset for medical domain QA. |
+| FreedomIntelligence/medical-o1-reasoning-SFT              | Chen et al. (2024). Huatuogpt-o1, towards medical complex reasoning with LLMs. https://huggingface.co/datasets/FreedomIntelligence/medical-o1-reasoning-SFT |
+| openlifescienceai/MedMCQA                                 | Pal et al. (2022). MedMCQA: A large-scale multi-subject multi-choice dataset for medical domain QA. https://huggingface.co/datasets/openlifescienceai/medmcqa|
 | stellalisy/mediQ                                          | https://huggingface.co/datasets/stellalisy/mediQ |
-| bigbio/MedQA                                              | Jin et al. (2021). What disease does this patient have? A large-scale open-domain QA dataset from medical exams. |
-| UCSC-VLAA/MedReason                                       | Wu et al. (2025). MedReason: Eliciting factual medical reasoning steps in LLMs via knowledge graphs. |
+| bigbio/MedQA                                              | Jin et al. (2021). What disease does this patient have? A large-scale open-domain QA dataset from medical exams. https://huggingface.co/datasets/bigbio/med_qa|
+| UCSC-VLAA/MedReason                                       | Wu et al. (2025). MedReason: Eliciting factual medical reasoning steps in LLMs via knowledge graphs. https://huggingface.co/datasets/UCSC-VLAA/MedReason |
 | Ajayaadhi/Medical-QA                                      | https://huggingface.co/datasets/Ajayaadhi/Medical-QA |
 | Comprehensive Medical Q&A Dataset (Kaggle)                | https://www.kaggle.com/datasets/thedevastator/comprehensive-medical-q-a-dataset |
 | HPAI-BSC/OpenMedQA                                        | Bayarri Planas, J. (n.d.). https://huggingface.co/datasets/HPAI-BSC/OpenMedQA |
 | qiaojin/PubMedQA                                          | https://huggingface.co/datasets/qiaojin/PubMedQA |
-| MedRAG/pubmed                                             | Xiong et al. (2024). Benchmarking retrieval-augmented generation for medicine. |
+| MedRAG/pubmed                                             | Xiong et al. (2024). Benchmarking retrieval-augmented generation for medicine. https://huggingface.co/datasets/MedRAG/pubmed|
 
 
 ---
