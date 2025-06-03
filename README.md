@@ -164,6 +164,8 @@ Evaluates the RAG+FT approach using the evaluation suite but also processes the 
 ├── 2d_PubMed_train_balanced.ipynb      # populating balanced-index (INDEX 2) 
 ├── 3_Training_7b_LoRA_balanced.ipynb   # Fine-tuning deepseek
 ├── 4_Evaluation_RAG+FT.ipynb           # Eval
+├──ClinIQ_paper.pdf                     # report
+├── ClinIQ_ProjectPresentation.pptx     # presentation slides
 ├── config.py                           # defining temp / max. new token / INDEX_NAME for experiments
 ├── README.MD
 ├── requirements.txt

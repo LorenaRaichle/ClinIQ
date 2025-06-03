@@ -143,7 +143,7 @@ The notebook performs the following main tasks:
   - mitigate training data dominance in the vector store (in Index 1, we observed that 400K training questions outnumbered 11K PubMed abstracts)
   - this was evident in retrieval bubble plots, where most documents retrieved came from the same domain as the test question.
   
-   <img src="visuals/Index1_bubble.png" alt="Index 1 Bubble" width="600"/>
+  <img src="visuals/Index1_bubble.png" alt="Index 1 Bubble" width="600"/>
 
 - **How is this achieved?**
   - Populating a new index 2 
@@ -155,7 +155,7 @@ The notebook performs the following main tasks:
 - **Result** 
   - shows better spread and fairness in document sourcing (increased PubMed representation) but still tends to retrieve documents from the same question type (performance similar to Index 1 across all question types)
 
-<img src="visuals/Index2_bubble.png" alt="Index 1 Bubble" width="600"/>
+    <img src="visuals/Index2_bubble.png" alt="Index 1 Bubble" width="600"/>
 
   
 
@@ -187,7 +187,7 @@ We experimented with different prompts and found that the ones listed in prompt_
 For the pipeline parameters, we used the setup below for the different question types. Since both True/False and MC questions only need to produce very short answers, we set the `max_new_tokens` to a lower number than in the SA and MH questions. Similarly, we set the `temperature` to 0.1 for True/False and MC because we did not want any creativity in the answer, but rather the most probable prediction. For SA and MH, we set the temperature to 0.7, as this was recommended in the literature.
 
 
-<img src="content\fine-tuning\pipe_params.png" alt="pipe params" width="600"/>
+<img src="content/fine-tuning/pipe_params.png" alt="pipe params" width="600"/>
 
 
 # Fine-tuning
@@ -202,7 +202,7 @@ We monitored training and evaluation loss using Weights & Biases.
 The concrete LoRA configuration is shown below.
 
 
-<img src="content\fine-tuning\lora_ft_params.png" alt="k param" width="600"/>
+<img src="content/fine-tuning/lora_ft_params.png" alt="k param" width="600"/>
 
 
 # Evaluation
