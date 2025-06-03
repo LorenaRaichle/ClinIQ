@@ -204,7 +204,7 @@ pip install -r requirements.txt
 
 ### 4. Download Data
 
-- Obtain the referenced medical datasets from Kaggle and HuggingFace (see the “References” section above).
+- The curated and processed data can be accessed via Huggingface (`"mkonstantinw/ClinIQ_data"`). Files should be added to one `data` folder, the given file structure should be respected.
 
 ### 5. (Optional) Set Up Jupyter Notebooks
 
