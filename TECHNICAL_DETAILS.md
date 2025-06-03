@@ -117,7 +117,24 @@ The notebook performs the following main tasks:
       
     <img src="visuals/Interntopic Distance Map.gif" alt="Retriever Flow Demo" width="400"/>
     <img src="visuals/TopicScores.png" alt="Retriever Flow Demo" width="600"/>
+    
+--- 
 
+- **Goal**:
+  - extracting medicine-specific metadata from training data to enable hybrid retrieval matching the query
+  
+- **How is this achieved?** 
+  - medicine specific NER on each sample question
+  - along embedding of each chunk, inserting medical cues in Pinecone metadata 
+  
+- **Implementation Details** see `/utils/RAG_metada.py` 
+  - using a spaCy model for biomedical named entity recognition (**models/en_ner_bc5cdr_md-0.5.4**):
+    - Named entities: diseases, medical condition, symptom, product
+    - Age/gender categorization
+    - Noun phrase keyword extraction
+  - defining keyword-based filters for retrieval, see `/utils/RAG_adv_pipeline.py` 
+
+    
     
 # Pubmed-Balanced-Index2
 (INDEX 2)
