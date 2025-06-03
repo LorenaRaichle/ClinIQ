@@ -284,7 +284,7 @@ Then open the notebooks in your browser, starting with `1a_Preprocessing_dataset
 Multiple Choice and True/False Evaluation
 | Model                | MC Acc. | MC Prec. | MC Rec. | T/F Acc. | T/F Prec. | T/F Rec. |
 | -------------------- | ------: | -------: | ------: | -------: | --------: | -------: |
-| Balanced Advance RAG plus FT|   0.422 |    0.321 |   0.319 |    0.573 |     0.436 |    0.392 |
+| Balanced Advanced RAG plus FT|   0.422 |    0.321 |   0.319 |    0.573 |     0.436 |    0.392 |
 | Advanced RAG plus FT |   0.467 |    0.388 |   0.377 |    0.595 |     0.440 |    0.405 |
 | Advanced RAG         |   0.337 |    0.263 |   0.249 |    0.437 |     0.401 |    0.305 |
 | FT                   |   0.404 |    0.334 |   0.318 |    0.655 |     0.488 |    0.440 |
@@ -293,7 +293,7 @@ Multiple Choice and True/False Evaluation
 Short Answer Evaluation
 | Model                |  BLEU | METEOR | ROUGE1 | ROUGE2 | ROUGEL | Prec. |  Rec. |    F1 | CosSim | ReasonCoh | SentSim | ParaSim |
 | -------------------- | ----: | -----: | -----: | -----: | -----: | ----: | ----: | ----: | -----: | --------: | ------: | ------: |
-| Balanced Advance RAG plus FT | 0.127 |  0.216 |  0.296 |  0.228 |  0.276 | 0.877 | 0.821 | 0.848 |  0.864 |     0.164 |   0.837 |   0.864 |
+| Balanced Advanced RAG plus FT | 0.127 |  0.216 |  0.296 |  0.228 |  0.276 | 0.877 | 0.821 | 0.848 |  0.864 |     0.164 |   0.837 |   0.864 |
 | Advanced RAG plus FT | 0.206 |  0.402 |  0.401 |  0.314 |  0.355 | 0.843 | 0.868 | 0.854 |  0.913 |     0.794 |   0.867 |   0.913 |
 | Advanced RAG         | 0.118 |  0.295 |  0.339 |  0.210 |  0.269 | 0.848 | 0.870 | 0.858 |  0.850 |     0.727 |   0.801 |   0.850 |
 | FT                   | 0.049 |  0.207 |  0.263 |  0.109 |  0.188 | 0.834 | 0.838 | 0.835 |  0.836 |     0.654 |   0.665 |   0.836 |
@@ -302,7 +302,7 @@ Short Answer Evaluation
 Multi Hop Evaluation
 | Model                |  BLEU | METEOR | ROUGE1 | ROUGE2 | ROUGEL | Prec. |  Rec. |    F1 | CosSim | ReasonCoh | SentSim | ParaSim |
 | -------------------- | ----: | -----: | -----: | -----: | -----: | ----: | ----: | ----: | -----: | --------: | ------: | ------: |
-| Balanced Advance RAG plus FT | 0.016 |  0.124 |  0.246 |  0.179 |  0.219 | 0.914 | 0.827 | 0.868 |  0.914 |     0.062 |   0.910 |   0.941 |
+| Balanced Advanced RAG plus FT | 0.016 |  0.124 |  0.246 |  0.179 |  0.219 | 0.914 | 0.827 | 0.868 |  0.914 |     0.062 |   0.910 |   0.941 |
 | Advanced RAG plus FT | 0.241 |  0.501 |  0.544 |  0.367 |  0.406 | 0.893 | 0.922 | 0.907 |  0.980 |     0.887 |   0.926 |   0.980 |
 | Advanced RAG         | 0.156 |  0.359 |  0.407 |  0.245 |  0.295 | 0.862 | 0.892 | 0.876 |  0.855 |     0.710 |   0.799 |   0.855 |
 | FT                   | 0.079 |  0.303 |  0.406 |  0.162 |  0.247 | 0.862 | 0.879 | 0.870 |  0.947 |     0.749 |   0.790 |   0.947 |
